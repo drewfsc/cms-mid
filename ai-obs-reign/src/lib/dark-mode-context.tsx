@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 interface DarkModeContextType {
   isDark: boolean;
@@ -21,34 +21,59 @@ export function DarkModeProvider({ children, forceMode }: DarkModeProviderProps)
   useEffect(() => {
     if (forceMode) {
       setIsDark(forceMode === 'dark');
-      document.documentElement.classList.toggle('dark', forceMode === 'dark');
+      // Apply the forced mode to the document
+      if (forceMode === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      return;
+    }
+
+    // Check for saved preference or default to system preference
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode) {
+      const isDarkMode = savedMode === 'dark';
+      setIsDark(isDarkMode);
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+      }
     } else {
-      // Check for saved preference or system preference
-      const saved = localStorage.getItem('darkMode');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const shouldBeDark = saved ? JSON.parse(saved) : prefersDark;
-      
-      setIsDark(shouldBeDark);
-      document.documentElement.classList.toggle('dark', shouldBeDark);
+      // Default to system preference
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDark(systemPrefersDark);
+      if (systemPrefersDark) {
+        document.documentElement.classList.add('dark');
+      }
     }
   }, [forceMode]);
 
   const toggle = () => {
-    if (forceMode) return; // Don't allow toggle when forced
+    if (forceMode) return; // Don't allow toggle if mode is forced
     
     const newMode = !isDark;
     setIsDark(newMode);
-    localStorage.setItem('darkMode', JSON.stringify(newMode));
-    document.documentElement.classList.toggle('dark', newMode);
+    localStorage.setItem('darkMode', newMode ? 'dark' : 'light');
+    
+    if (newMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   };
 
   const setMode = (mode: 'light' | 'dark') => {
-    if (forceMode) return; // Don't allow manual setting when forced
+    if (forceMode) return; // Don't allow manual setting if mode is forced
     
-    const newMode = mode === 'dark';
-    setIsDark(newMode);
-    localStorage.setItem('darkMode', JSON.stringify(newMode));
-    document.documentElement.classList.toggle('dark', newMode);
+    const isDarkMode = mode === 'dark';
+    setIsDark(isDarkMode);
+    localStorage.setItem('darkMode', mode);
+    
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   };
 
   return (
