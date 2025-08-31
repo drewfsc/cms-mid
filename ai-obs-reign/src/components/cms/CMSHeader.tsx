@@ -1,18 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Moon, Sun, Home, LogOut } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, Home, LogOut } from 'lucide-react';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 interface CMSHeaderProps {
   title: string;
   showBackButton?: boolean;
 }
 
-// Simple dark mode state for this component
 const CMSHeader: React.FC<CMSHeaderProps> = ({ title, showBackButton = false }) => {
-  const [isDark, setIsDark] = useState(false);
-  const toggle = () => setIsDark(!isDark);
   
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -41,18 +38,8 @@ const CMSHeader: React.FC<CMSHeaderProps> = ({ title, showBackButton = false }) 
           </div>
           
           <div className="flex items-center space-x-4">
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={toggle}
-              className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-              title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {isDark ? (
-                <Sun className="w-4 h-4 text-yellow-500" />
-              ) : (
-                <Moon className="w-4 h-4 text-gray-600" />
-              )}
-            </button>
+            {/* Animated Dark Mode Toggle */}
+            <ThemeToggle />
             
             <Link
               href="/"
