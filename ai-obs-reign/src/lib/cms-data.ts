@@ -60,7 +60,15 @@ export const CMS_STORAGE_KEY = 'reign-cms-data';
 
 // CMS Data Management Functions
 export class CMSDataManager {
-  static getHeroData(): HeroSectionData {
+  private static useSupabase = false; // Toggle this to true when Supabase is configured
+
+  static async getHeroData(): Promise<HeroSectionData> {
+    if (this.useSupabase) {
+      // TODO: Use SupabaseCMSManager when ready
+      // return await SupabaseCMSManager.getHeroData();
+    }
+    
+    // Fallback to localStorage
     if (typeof window === 'undefined') return defaultHeroData;
     
     try {
@@ -72,7 +80,47 @@ export class CMSDataManager {
     }
   }
 
-  static saveHeroData(data: HeroSectionData): void {
+  static async saveHeroData(data: HeroSectionData): Promise<void> {
+    if (this.useSupabase) {
+      // TODO: Use SupabaseCMSManager when ready
+      // return await SupabaseCMSManager.saveHeroData(data);
+    }
+    
+    // Fallback to localStorage
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const updatedData = {
+        ...data,
+        updatedAt: new Date().toISOString()
+      };
+      localStorage.setItem(`${CMS_STORAGE_KEY}-hero`, JSON.stringify(updatedData));
+    } catch (error) {
+      console.error('Error saving hero data:', error);
+      throw error;
+    }
+  }
+
+  static resetHeroData(): void {
+    if (typeof window === 'undefined') return;
+    
+    localStorage.removeItem(`${CMS_STORAGE_KEY}-hero`);
+  }
+
+  // Synchronous version for compatibility
+  static getHeroDataSync(): HeroSectionData {
+    if (typeof window === 'undefined') return defaultHeroData;
+    
+    try {
+      const stored = localStorage.getItem(`${CMS_STORAGE_KEY}-hero`);
+      return stored ? JSON.parse(stored) : defaultHeroData;
+    } catch (error) {
+      console.error('Error loading hero data:', error);
+      return defaultHeroData;
+    }
+  }
+
+  static saveHeroDataSync(data: HeroSectionData): void {
     if (typeof window === 'undefined') return;
     
     try {
@@ -84,11 +132,5 @@ export class CMSDataManager {
     } catch (error) {
       console.error('Error saving hero data:', error);
     }
-  }
-
-  static resetHeroData(): void {
-    if (typeof window === 'undefined') return;
-    
-    localStorage.removeItem(`${CMS_STORAGE_KEY}-hero`);
   }
 }

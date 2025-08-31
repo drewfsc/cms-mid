@@ -8,7 +8,7 @@ const HeroSection = () => {
   const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
-    setHeroData(CMSDataManager.getHeroData());
+    setHeroData(CMSDataManager.getHeroDataSync());
   }, []);
 
   if (!heroData) {
@@ -19,20 +19,20 @@ const HeroSection = () => {
 
   const handleSave = () => {
     if (heroData) {
-      CMSDataManager.saveHeroData(heroData);
+      CMSDataManager.saveHeroDataSync(heroData);
       setIsEditMode(false);
     }
   };
 
-  const updateHeroData = (field: string, value: any) => {
+  const updateHeroData = (field: string, value: unknown) => {
     if (!heroData) return;
     
     const keys = field.split('.');
     const newData = { ...heroData };
-    let current: any = newData;
+    let current: Record<string, unknown> = newData as Record<string, unknown>;
     
     for (let i = 0; i < keys.length - 1; i++) {
-      current = current[keys[i]];
+      current = current[keys[i]] as Record<string, unknown>;
     }
     
     current[keys[keys.length - 1]] = value;
