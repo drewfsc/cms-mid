@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Menu, X, LogOut, Settings } from 'lucide-react';
+import { CMSAuthManager } from '@/lib/cms-auth';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userDisplayName, setUserDisplayName] = useState('');
+  const router = useRouter();
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -14,6 +19,31 @@ const Header = () => {
     { name: 'About', href: '#about' },
     { name: 'Contact', href: '#contact' },
   ];
+
+  useEffect(() => {
+    // Check authentication status
+    const checkAuth = () => {
+      const loggedIn = CMSAuthManager.isLoggedIn();
+      setIsLoggedIn(loggedIn);
+      if (loggedIn) {
+        setUserDisplayName(CMSAuthManager.getUserDisplayName());
+      }
+    };
+
+    checkAuth();
+    
+    // Check auth status periodically
+    const interval = setInterval(checkAuth, 30000); // Check every 30 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleLogout = () => {
+    CMSAuthManager.logout();
+    setIsLoggedIn(false);
+    setUserDisplayName('');
+    router.push('/');
+  };
 
   return (
     <header className="fixed top-0 w-full bg-white/10 backdrop-blur-md border-b border-white/20 z-50">
@@ -44,18 +74,49 @@ const Header = () => {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link
-              href="#demo"
-              className="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Request Demo
-            </Link>
-            <Link
-              href="#get-started"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Get Started
-            </Link>
+            {isLoggedIn ? (
+              <>
+                {/* CMS User Info */}
+                <div className="flex items-center space-x-2 px-3 py-2 bg-white/10 rounded-lg">
+                  <Settings className="w-4 h-4 text-blue-400" />
+                  <span className="text-sm font-medium text-white">
+                    {userDisplayName}
+                  </span>
+                </div>
+                
+                {/* CMS Dashboard Link */}
+                <Link
+                  href="/cms/dashboard"
+                  className="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  CMS Dashboard
+                </Link>
+                
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="#demo"
+                  className="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Request Demo
+                </Link>
+                <Link
+                  href="#get-started"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -88,20 +149,55 @@ const Header = () => {
                 </Link>
               ))}
               <div className="pt-4 space-y-2">
-                <Link
-                  href="#demo"
-                  className="block text-white/80 hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Request Demo
-                </Link>
-                <Link
-                  href="#get-started"
-                  className="block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-base font-medium text-center"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Get Started
-                </Link>
+                {isLoggedIn ? (
+                  <>
+                    {/* Mobile CMS User Info */}
+                    <div className="flex items-center space-x-2 px-3 py-2 bg-white/10 rounded-lg">
+                      <Settings className="w-4 h-4 text-blue-400" />
+                      <span className="text-sm font-medium text-white">
+                        {userDisplayName}
+                      </span>
+                    </div>
+                    
+                    {/* Mobile CMS Dashboard Link */}
+                    <Link
+                      href="/cms/dashboard"
+                      className="block text-white/80 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      CMS Dashboard
+                    </Link>
+                    
+                    {/* Mobile Logout Button */}
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center justify-center space-x-2"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Logout</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="#demo"
+                      className="block text-white/80 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Request Demo
+                    </Link>
+                    <Link
+                      href="#get-started"
+                      className="block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-base font-medium text-center"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

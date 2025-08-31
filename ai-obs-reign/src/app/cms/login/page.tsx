@@ -2,26 +2,40 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Info } from 'lucide-react';
+import { CMSAuthManager, DEMO_CREDENTIALS } from '@/lib/cms-auth';
 
 export default function CMSLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const router = useRouter();
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
     
-    // TODO: Implement Supabase email/password auth
-    console.log('Email login:', formData);
+    try {
+      const success = CMSAuthManager.login(formData.email, formData.password);
+      
+      if (success) {
+        // Redirect to CMS dashboard
+        router.push('/cms/dashboard');
+      } else {
+        setError('Invalid email or password. Please try again.');
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.');
+      console.error('Login error:', err);
+    }
     
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    setIsLoading(false);
   };
 
   const handleGoogleLogin = async () => {
@@ -55,8 +69,33 @@ export default function CMSLogin() {
           </p>
         </div>
 
+        {/* Demo Credentials Info */}
+        <div className="bg-blue-500/10 backdrop-blur-lg rounded-xl p-4 border border-blue-400/20 mb-6">
+          <div className="flex items-start space-x-3">
+            <Info className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+            <div className="text-sm">
+              <p className="text-blue-200 font-medium mb-2">Demo Credentials:</p>
+              <div className="space-y-1 text-blue-100">
+                <p><strong>Admin:</strong> admin@reign.com / admin123</p>
+                <p><strong>Editor:</strong> editor@reign.com / editor123</p>
+                <p><strong>Demo:</strong> demo@reign.com / demo123</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Login Form */}
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 bg-red-500/10 border border-red-400/20 rounded-lg p-4">
+              <div className="flex items-center space-x-3">
+                <AlertCircle className="w-5 h-5 text-red-400" />
+                <p className="text-red-200 text-sm">{error}</p>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleEmailLogin} className="space-y-6">
             {/* Email Field */}
             <div>

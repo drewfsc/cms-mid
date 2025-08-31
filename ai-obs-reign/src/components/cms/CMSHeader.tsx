@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Home, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Home, LogOut, User } from 'lucide-react';
 import { useDarkMode } from '@/lib/dark-mode-context';
+import { CMSAuthManager } from '@/lib/cms-auth';
 import Switch from '../ui/Sunny';
 
 interface CMSHeaderProps {
@@ -12,6 +14,18 @@ interface CMSHeaderProps {
 
 const CMSHeader: React.FC<CMSHeaderProps> = ({ title, showBackButton = false }) => {
   const { isDark, toggle } = useDarkMode();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Use the auth manager to handle logout
+    CMSAuthManager.logout();
+    
+    // Redirect to homepage
+    router.push('/');
+  };
+
+  const currentUser = CMSAuthManager.getCurrentUser();
+  const userDisplayName = CMSAuthManager.getUserDisplayName();
   
   return (
     <header className="bg-black dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -40,13 +54,24 @@ const CMSHeader: React.FC<CMSHeaderProps> = ({ title, showBackButton = false }) 
           </div>
           
           <div className="flex items-center space-x-4">
+            {/* User Info */}
+            {currentUser && (
+              <div className="flex items-center space-x-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  {userDisplayName}
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
+                  {currentUser.role}
+                </span>
+              </div>
+            )}
+
             {/* Animated Dark Mode Toggle */}
             <div className={`h-2`}>
-            <Switch/>
-
+              <Switch/>
             </div>
 
-            
             <Link
               href="/"
               className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -54,11 +79,15 @@ const CMSHeader: React.FC<CMSHeaderProps> = ({ title, showBackButton = false }) 
               <Home className="w-4 h-4 mr-2" />
               View Site
             </Link>
-            <button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+            
+            <button 
+              onClick={handleLogout}
+              className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
+              title="Logout of CMS"
+            >
               <LogOut className="w-4 h-4 mr-2" />
               Logout
             </button>
-            
           </div>
         </div>
       </div>
