@@ -5,7 +5,7 @@ const Switch = () => {
     <div className="theme-switch">
       <style jsx>{`
         .theme-switch {
-          --toggle-size: 30px;
+          --toggle-size: 16px;
           --container-width: 5.625em;
           --container-height: 2.5em;
           --container-radius: 6.25em;
@@ -145,6 +145,19 @@ const Switch = () => {
 
         .theme-switch__checkbox:checked + .theme-switch__container {
           background-color: var(--container-night-bg);
+          background-image: url('/btm-bg.jpg');
+          background-size: cover;
+          background-position: center;
+          background-blend-mode: multiply;
+        }
+        
+        .theme-switch__checkbox:checked + .theme-switch__container::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-color: rgba(29, 31, 44, 0.7);
+          border-radius: var(--container-radius);
+          z-index: 0;
         }
 
         .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__circle-container {
@@ -172,7 +185,7 @@ const Switch = () => {
           transform: translateY(-50%);
         }
       `}</style>
-      <label>
+      <label className="theme-switch">
         <input type="checkbox" className="theme-switch__checkbox" />
         <div className="theme-switch__container">
           <div className="theme-switch__clouds" />
@@ -194,6 +207,6 @@ const Switch = () => {
       </label>
     </div>
   );
-}
+};
 
 export default Switch;

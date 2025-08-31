@@ -34,7 +34,7 @@ const Footer = () => {
     { name: 'GitHub', href: '#', icon: Github },
     { name: 'Twitter', href: '#', icon: Twitter },
     { name: 'LinkedIn', href: '#', icon: Linkedin },
-    { name: 'Email', href: 'mailto:contact@opscompanion.com', icon: Mail },
+    { name: 'Email', href: 'mailto:contact@R.E.I.G.N.com', icon: Mail },
   ];
 
   return (
@@ -47,7 +47,7 @@ const Footer = () => {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">OC</span>
               </div>
-              <span className="text-xl font-bold">OpsCompanion</span>
+              <span className="text-xl font-bold">R.E.I.G.N</span>
             </div>
             <p className="text-gray-300 text-sm leading-6 max-w-md">
               Advanced AI-powered observability platform for DevOps automation and monitoring. 
@@ -151,7 +151,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
             <p className="text-gray-400 text-sm">
-              © 2024 OpsCompanion. All rights reserved.
+              © 2024 R.E.I.G.N. All rights reserved.
             </p>
             <Link
               href="/cms/login"

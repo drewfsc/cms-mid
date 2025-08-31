@@ -25,7 +25,7 @@ export default function Home() {
           </div>
           
           {/* Sections with regular background */}
-          <div className="relative z-10 bg-white">
+          <div className="relative z-10 bg-black">
             <SolutionsSection />
             <ContentSection />
             <AboutSection />

@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "OpsCompanion - AI Observability Platform",
+  title: "R.E.I.G.N - AI Observability Platform",
   description: "Advanced AI-powered observability platform for DevOps automation and monitoring",
   keywords: ["AI observability", "DevOps", "monitoring", "automation", "platform"],
 };
@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} font-sans antialiased bg-black`}>
         <DarkModeProvider forceMode="dark">
           {children}
         </DarkModeProvider>

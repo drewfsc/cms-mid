@@ -1,6 +1,6 @@
-# OpsCompanion - AI Observability Platform
+# R.E.I.G.N - AI Observability Platform
 
-A professional replica of the OpsCompanion website built with Next.js, TypeScript, and Tailwind CSS, featuring integrated content from the provided technical documentation.
+A professional replica of the R.E.I.G.N website built with Next.js, TypeScript, and Tailwind CSS, featuring integrated content from the provided technical documentation.
 
 ## 🚀 Features
 

@@ -14,14 +14,14 @@ const CMSHeader: React.FC<CMSHeaderProps> = ({ title, showBackButton = false }) 
   const { isDark, toggle } = useDarkMode();
   
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <header className="bg-black dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center space-x-4">
             {showBackButton && (
               <Link
                 href="/cms/dashboard"
-                className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-black dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
@@ -41,7 +41,10 @@ const CMSHeader: React.FC<CMSHeaderProps> = ({ title, showBackButton = false }) 
           
           <div className="flex items-center space-x-4">
             {/* Animated Dark Mode Toggle */}
+            <div className={`h-2`}>
             <Switch/>
+
+            </div>
 
             
             <Link
@@ -55,6 +58,7 @@ const CMSHeader: React.FC<CMSHeaderProps> = ({ title, showBackButton = false }) 
               <LogOut className="w-4 h-4 mr-2" />
               Logout
             </button>
+            
           </div>
         </div>
       </div>

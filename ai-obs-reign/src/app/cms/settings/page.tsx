@@ -89,7 +89,7 @@ export default function CMSSettings() {
               </label>
               <input
                 type="text"
-                defaultValue="OpsCompanion"
+                defaultValue="R.E.I.G.N"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>

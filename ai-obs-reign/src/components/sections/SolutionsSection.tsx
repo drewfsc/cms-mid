@@ -57,7 +57,7 @@ const SolutionsSection = () => {
   ];
 
   return (
-    <section id="solutions" className="py-20 bg-gray-50">
+    <section id="solutions" className="py-20 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -66,13 +66,13 @@ const SolutionsSection = () => {
             Solutions
           </div>
           
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-400 mb-4">
             Tailored Solutions for
             <span className="text-blue-600 block">Every Environment</span>
           </h2>
           
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            From cloud-native startups to enterprise data centers, OpsCompanion adapts to your 
+          <p className="text-xl text-gray-500 max-w-3xl mx-auto">
+            From cloud-native startups to enterprise data centers, R.E.I.G.N adapts to your 
             infrastructure and scales with your needs.
           </p>
         </div>
@@ -84,18 +84,18 @@ const SolutionsSection = () => {
             return (
               <div
                 key={index}
-                className="group bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                className="group bg-purple-950/10 rounded-xl p-8 shadow-sm border border-gray-900 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="mb-6">
                   <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${solution.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <Icon className="h-8 w-8 text-white" />
                   </div>
                   
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h3 className="text-xl font-semibold text-gray-400 mb-3">
                     {solution.title}
                   </h3>
                   
-                  <p className="text-gray-600 leading-relaxed mb-6">
+                  <p className="text-gray-200 leading-relaxed mb-6">
                     {solution.description}
                   </p>
                 </div>
@@ -104,8 +104,8 @@ const SolutionsSection = () => {
                 <div className="space-y-3 mb-6">
                   {solution.features.map((feature, featureIndex) => (
                     <div key={featureIndex} className="flex items-center space-x-3">
-                      <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                      <span className="text-sm text-gray-600">{feature}</span>
+                      <CheckCircle className="h-4 w-4 text-green-300 flex-shrink-0" />
+                      <span className="text-sm text-gray-400">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -121,13 +121,13 @@ const SolutionsSection = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-center text-white">
+        <div className="bg-gradient-to-r from-blue-900/20 to-purple-800/40 rounded-2xl p-12 text-center text-white">
           <h3 className="text-2xl md:text-3xl font-bold mb-4">
             Don&apos;t See Your Use Case?
           </h3>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
             Our platform is highly customizable. Let&apos;s discuss how we can tailor 
-            OpsCompanion to meet your specific observability requirements.
+            R.E.I.G.N to meet your specific observability requirements.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="px-8 py-3 bg-white hover:bg-gray-100 text-blue-600 font-medium rounded-lg transition-colors">

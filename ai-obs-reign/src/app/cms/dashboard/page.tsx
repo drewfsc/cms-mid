@@ -128,7 +128,7 @@ export default function CMSDashboard() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Content Management</h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Manage your OpsCompanion website content and settings
+            Manage your R.E.I.G.N website content and settings
           </p>
         </div>
 

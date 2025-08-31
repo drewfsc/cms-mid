@@ -7,8 +7,8 @@ const ContactSection = () => {
       icon: Mail,
       title: 'Email Us',
       description: 'Get in touch with our team',
-      contact: 'contact@opscompanion.com',
-      href: 'mailto:contact@opscompanion.com'
+      contact: 'contact@R.E.I.G.N.com',
+      href: 'mailto:contact@R.E.I.G.N.com'
     },
     {
       icon: Phone,
@@ -51,7 +51,7 @@ const ContactSection = () => {
               </h2>
               
               <p className="text-xl text-gray-300 leading-relaxed">
-                Let&apos;s discuss how OpsCompanion can help your team achieve operational excellence. 
+                Let&apos;s discuss how R.E.I.G.N can help your team achieve operational excellence. 
                 Our experts are ready to provide personalized recommendations.
               </p>
             </div>
@@ -103,7 +103,7 @@ const ContactSection = () => {
                   <input
                     type="text"
                     id="firstName"
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-black"
                     placeholder="John"
                   />
                 </div>
@@ -114,7 +114,7 @@ const ContactSection = () => {
                   <input
                     type="text"
                     id="lastName"
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-black"
                     placeholder="Doe"
                   />
                 </div>
@@ -127,7 +127,7 @@ const ContactSection = () => {
                 <input
                   type="email"
                   id="email"
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-black"
                   placeholder="john@company.com"
                 />
               </div>
@@ -139,7 +139,7 @@ const ContactSection = () => {
                 <input
                   type="text"
                   id="company"
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-black"
                   placeholder="Your Company"
                 />
               </div>
@@ -151,7 +151,7 @@ const ContactSection = () => {
                 <textarea
                   id="message"
                   rows={4}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-black resize-none"
                   placeholder="Tell us about your observability challenges..."
                 ></textarea>
               </div>
