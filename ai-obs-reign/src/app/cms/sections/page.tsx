@@ -23,8 +23,7 @@ import DynamicGridSection from '@/components/sections/dynamic/DynamicGridSection
 import DynamicColumnsSection from '@/components/sections/dynamic/DynamicColumnsSection';
 
 export default function CMSSections() {
-  const [sections, setSections] = useState<Array<{type: 'fixed' | 'dynamic', data: any}>>([]);
-  const [dynamicSections, setDynamicSections] = useState<DynamicSection[]>([]);
+  const [sections, setSections] = useState<DynamicSection[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
@@ -34,13 +33,8 @@ export default function CMSSections() {
   }, []);
 
   const loadSections = () => {
-    const allSections = CMSDataManager.getAllSections();
-    setSections(allSections);
-    
-    const dynamicOnly = allSections
-      .filter(s => s.type === 'dynamic')
-      .map(s => s.data as DynamicSection);
-    setDynamicSections(dynamicOnly);
+    const dynamicSections = CMSDataManager.getDynamicSections();
+    setSections(dynamicSections);
   };
 
   const handleAddSection = (template: SectionTemplate, name: string) => {
@@ -68,7 +62,7 @@ export default function CMSSections() {
   };
 
   const handleToggleVisibility = (sectionId: string) => {
-    const section = dynamicSections.find(s => s.id === sectionId);
+    const section = sections.find(s => s.id === sectionId);
     if (section) {
       CMSDataManager.updateDynamicSection(sectionId, {
         isVisible: !section.isVisible
@@ -86,8 +80,7 @@ export default function CMSSections() {
 
   const handleReorderSections = (fromIndex: number, toIndex: number) => {
     // This is a simplified reorder - in production you'd want drag-and-drop
-    const dynamicOnly = sections.filter(s => s.type === 'dynamic');
-    const reorderedIds = dynamicOnly.map(s => s.data.id);
+    const reorderedIds = sections.map(s => s.id);
     
     // Swap positions
     const temp = reorderedIds[fromIndex];
@@ -147,116 +140,95 @@ export default function CMSSections() {
         {/* Section List */}
         <div className="space-y-8">
           {sections.map((section, index) => {
-            const isFixed = section.type === 'fixed';
-            const sectionData = section.data;
-            const isDynamic = !isFixed;
-            
             return (
               <div
-                key={isFixed ? sectionData.sectionType : sectionData.id}
-                data-section-id={isDynamic ? sectionData.id : undefined}
+                key={section.id}
+                data-section-id={section.id}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
               >
                 {/* Section Header */}
                 <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                      {isDynamic && (
-                        <GripVertical className="w-5 h-5 text-gray-400 cursor-move" />
-                      )}
+                      <GripVertical className="w-5 h-5 text-gray-400 cursor-move" />
                       
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                          {isFixed ? sectionData.title?.main || sectionData.sectionType : sectionData.name}
+                          {section.name}
                         </h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {isFixed ? 'Fixed Section' : `${sectionData.layout} Layout`}
+                          {section.layout} Layout
                         </p>
                       </div>
                     </div>
                     
                     <div className="flex items-center space-x-2">
-                      {isDynamic && (
-                        <>
-                          <button
-                            onClick={() => handleToggleVisibility(sectionData.id)}
-                            className="p-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-                            title={sectionData.isVisible ? 'Hide section' : 'Show section'}
-                          >
-                            {sectionData.isVisible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                          </button>
-                          
-                          <button
-                            onClick={() => setEditingSection(
-                              editingSection === sectionData.id ? null : sectionData.id
-                            )}
-                            className={`p-2 rounded ${
-                              editingSection === sectionData.id
-                                ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400'
-                                : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
-                            }`}
-                            title="Edit section"
-                          >
-                            {editingSection === sectionData.id ? <X className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
-                          </button>
-                          
-                          <button
-                            onClick={() => handleDeleteSection(sectionData.id)}
-                            className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                            title="Delete section"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </>
-                      )}
+                      <button
+                        onClick={() => handleToggleVisibility(section.id)}
+                        className="p-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                        title={section.isVisible ? 'Hide section' : 'Show section'}
+                      >
+                        {section.isVisible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                      </button>
                       
-                      {isFixed && (
-                        <a
-                          href={`/cms/content#${sectionData.sectionType}`}
-                          className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-sm hover:bg-gray-200 dark:hover:bg-gray-600"
-                        >
-                          Edit in Content Manager
-                        </a>
-                      )}
+                      <button
+                        onClick={() => setEditingSection(
+                          editingSection === section.id ? null : section.id
+                        )}
+                        className={`p-2 rounded ${
+                          editingSection === section.id
+                            ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400'
+                            : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                        }`}
+                        title="Edit section"
+                      >
+                        {editingSection === section.id ? <X className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                      </button>
+                      
+                      <button
+                        onClick={() => handleDeleteSection(section.id)}
+                        className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                        title="Delete section"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 </div>
 
                 {/* Section Preview */}
-                {isDynamic && (
-                  <div className={`${sectionData.isVisible ? '' : 'opacity-50'}`}>
-                    {editingSection === sectionData.id && (
-                      <div className="bg-blue-50 dark:bg-blue-900/20 border-t border-blue-200 dark:border-blue-800 px-6 py-3 flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                          <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                            Editing Mode - Make your changes below
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => setEditingSection(null)}
-                          className="px-4 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
-                        >
-                          Done Editing
-                        </button>
+                <div className={`${section.isVisible ? '' : 'opacity-50'}`}>
+                  {editingSection === section.id && (
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border-t border-blue-200 dark:border-blue-800 px-6 py-3 flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                          Editing Mode - Make your changes below
+                        </span>
                       </div>
-                    )}
-                    <div className={`border-4 transition-colors ${
-                      editingSection === sectionData.id 
-                        ? 'border-blue-400 dark:border-blue-600' 
-                        : 'border-transparent hover:border-gray-200 dark:hover:border-gray-600'
-                    }`}>
-                      {renderSectionPreview(sectionData)}
+                      <button
+                        onClick={() => setEditingSection(null)}
+                        className="px-4 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                      >
+                        Done Editing
+                      </button>
                     </div>
+                  )}
+                  <div className={`border-4 transition-colors ${
+                    editingSection === section.id 
+                      ? 'border-blue-400 dark:border-blue-600' 
+                      : 'border-transparent hover:border-gray-200 dark:hover:border-gray-600'
+                  }`}>
+                    {renderSectionPreview(section)}
                   </div>
-                )}
+                </div>
               </div>
             );
           })}
         </div>
 
         {/* Empty State */}
-        {dynamicSections.length === 0 && (
+        {sections.length === 0 && (
           <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
               No dynamic sections yet

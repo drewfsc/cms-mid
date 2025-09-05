@@ -748,26 +748,8 @@ export class CMSDataManager {
     localStorage.removeItem('cms-dynamic-sections-updated');
   }
 
-  // Get all sections including fixed and dynamic
-  static getAllSections(): Array<{type: 'fixed' | 'dynamic', data: any}> {
-    const sections: Array<{type: 'fixed' | 'dynamic', data: any}> = [];
-    
-    // Add fixed sections
-    sections.push({ type: 'fixed', data: { ...this.getHeroDataSync(), sectionType: 'hero', order: -5 } });
-    sections.push({ type: 'fixed', data: { ...this.getFeaturesDataSync(), sectionType: 'features', order: -4 } });
-    sections.push({ type: 'fixed', data: { ...this.getSolutionsDataSync(), sectionType: 'solutions', order: -3 } });
-    
-    // Add dynamic sections
-    const dynamicSections = this.getDynamicSections();
-    dynamicSections.forEach(section => {
-      sections.push({ type: 'dynamic', data: section });
-    });
-    
-    // Add more fixed sections
-    sections.push({ type: 'fixed', data: { ...this.getAboutDataSync(), sectionType: 'about', order: 1000 } });
-    sections.push({ type: 'fixed', data: { ...this.getContactDataSync(), sectionType: 'contact', order: 1001 } });
-    
-    // Sort by order
-    return sections.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+  // Get all sections - now only dynamic
+  static getAllSections(): DynamicSection[] {
+    return this.getDynamicSections();
   }
 }

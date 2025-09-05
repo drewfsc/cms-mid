@@ -6,15 +6,20 @@ import Footer from '@/components/layout/Footer';
 import ParallaxBackground from '@/components/layout/ParallaxBackground';
 import DynamicSectionRenderer from '@/components/sections/DynamicSectionRenderer';
 import { CMSDataManager } from '@/lib/cms-data';
+import { DynamicSection } from '@/lib/dynamic-sections';
+import { ContentMigration } from '@/lib/content-migration';
 
 export default function Home() {
-  const [sections, setSections] = useState<Array<{type: 'fixed' | 'dynamic', data: any}>>([]);
+  const [sections, setSections] = useState<DynamicSection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load all sections from CMS
-    const allSections = CMSDataManager.getAllSections();
-    setSections(allSections);
+    // Run migration if needed (converts static content to dynamic sections)
+    ContentMigration.runMigration();
+    
+    // Load dynamic sections from CMS
+    const dynamicSections = CMSDataManager.getDynamicSections();
+    setSections(dynamicSections);
     setIsLoading(false);
   }, []);
 
@@ -26,39 +31,36 @@ export default function Home() {
     );
   }
 
-  // Separate sections that need parallax background from those that don't
-  const parallaxSections = sections.filter(s => {
-    if (s.type === 'fixed') {
-      return ['hero', 'features'].includes(s.data.sectionType);
-    }
-    return false; // Dynamic sections can be configured later
-  });
-
-  const regularSections = sections.filter(s => {
-    if (s.type === 'fixed') {
-      return !['hero', 'features'].includes(s.data.sectionType);
-    }
-    return true; // All dynamic sections go in regular background for now
-  });
+  // Filter visible sections and sort by order
+  const visibleSections = sections
+    .filter(section => section.isVisible)
+    .sort((a, b) => a.order - b.order);
 
   return (
     <div className="min-h-screen">
-      {/* Parallax Background - covers header, hero, and features */}
+      {/* Parallax Background - covers header and first sections */}
       <ParallaxBackground />
       
       {/* Content with proper z-index layering */}
       <div className="relative">
         <Header />
-        <main>
-          {/* Sections with parallax background */}
-          <div className="relative z-10">
-            <DynamicSectionRenderer sections={parallaxSections} />
-          </div>
-          
-          {/* Sections with regular background */}
-          <div className="relative z-10 bg-black">
-            <DynamicSectionRenderer sections={regularSections} />
-          </div>
+        <main className="relative z-10">
+          {visibleSections.length === 0 ? (
+            // Empty state when no sections exist
+            <div className="min-h-screen flex items-center justify-center text-white">
+              <div className="text-center">
+                <h1 className="text-4xl font-bold mb-4">Welcome to R.E.I.G.N</h1>
+                <p className="text-xl text-gray-300 mb-8">
+                  Your dynamic content management system is ready.
+                </p>
+                <p className="text-gray-400">
+                  Visit the CMS to add your first section.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <DynamicSectionRenderer sections={visibleSections} />
+          )}
         </main>
         <Footer />
       </div>

@@ -18,36 +18,12 @@ import {
 export default function CMSDashboard() {
   const menuItems = [
     { 
-      name: 'Content Sections', 
-      href: '/cms/content', 
-      icon: FileText, 
-      description: 'Edit hero, about, and other page sections',
-      color: 'bg-blue-100 text-blue-600',
-      stats: '6 sections'
-    },
-    { 
-      name: 'Dynamic Sections', 
+      name: 'Page Sections', 
       href: '/cms/sections', 
       icon: Layout, 
-      description: 'Add and manage custom page sections',
-      color: 'bg-purple-100 text-purple-600',
-      stats: 'Custom layouts'
-    },
-    { 
-      name: 'Features', 
-      href: '/cms/features', 
-      icon: BarChart3, 
-      description: 'Manage platform features and capabilities',
-      color: 'bg-green-100 text-green-600',
-      stats: '9 features'
-    },
-    { 
-      name: 'Solutions', 
-      href: '/cms/solutions', 
-      icon: Settings, 
-      description: 'Configure solution offerings and use cases',
-      color: 'bg-purple-100 text-purple-600',
-      stats: '6 solutions'
+      description: 'Add, edit, and manage all page sections',
+      color: 'bg-blue-100 text-blue-600',
+      stats: 'Dynamic content'
     },
     { 
       name: 'Media Library', 
@@ -100,25 +76,18 @@ export default function CMSDashboard() {
 
   const quickStats = [
     {
-      label: 'Total Sections',
-      value: '6',
-      change: '+0',
-      icon: FileText,
+      label: 'Dynamic Sections',
+      value: '5',
+      change: '+5',
+      icon: Layout,
       color: 'text-blue-600'
     },
     {
-      label: 'Active Features',
-      value: '9',
-      change: '+2',
-      icon: BarChart3,
+      label: 'Visible Sections',
+      value: '5',
+      change: '+0',
+      icon: Eye,
       color: 'text-green-600'
-    },
-    {
-      label: 'Solutions',
-      value: '6',
-      change: '+1',
-      icon: Settings,
-      color: 'text-purple-600'
     },
     {
       label: 'Media Files',
@@ -126,6 +95,13 @@ export default function CMSDashboard() {
       change: '+5',
       icon: Image,
       color: 'text-orange-600'
+    },
+    {
+      label: 'Last Updated',
+      value: 'Today',
+      change: '',
+      icon: Calendar,
+      color: 'text-purple-600'
     }
   ];
 
