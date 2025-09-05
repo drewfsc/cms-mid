@@ -122,7 +122,6 @@ const Header = () => {
                 >
                   Get Started
                 </button>
-                </button>
                 {/* Quick Test Login Button */}
                 <button
                   onClick={() => {
@@ -226,7 +225,6 @@ const Header = () => {
                       className="block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-base font-medium text-center w-full"
                     >
                       Get Started
-                    </button>
                     </button>
                   </>
                 )}
