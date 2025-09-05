@@ -17,15 +17,6 @@ export class SectionStylingUtils {
     let containerClass = '';
     let backgroundImageStyle: React.CSSProperties | undefined;
 
-    // Apply background color
-    if (selectedColor) {
-      if (selectedColor.hex.startsWith('linear-gradient')) {
-        containerStyle.background = selectedColor.hex;
-      } else {
-        containerStyle.backgroundColor = selectedColor.hex;
-      }
-    }
-
     // Apply text color theme
     switch (styling.textColor) {
       case 'light':
@@ -55,8 +46,9 @@ export class SectionStylingUtils {
         break;
     }
 
-    // Apply background image if present
+    // Handle background styling
     if (styling.backgroundImage) {
+      // If background image is present, apply it with proper layering
       const opacity = (styling.imageOpacity || 20) / 100;
       
       backgroundImageStyle = {
@@ -67,7 +59,7 @@ export class SectionStylingUtils {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         opacity,
-        zIndex: -1
+        zIndex: 0 // Above the background color, below content (z-10)
       };
 
       // Add parallax transform if enabled
@@ -76,8 +68,26 @@ export class SectionStylingUtils {
         backgroundImageStyle.willChange = 'transform';
       }
 
+      // Apply background color to container (will be behind the image)
+      if (selectedColor) {
+        if (selectedColor.hex.startsWith('linear-gradient')) {
+          containerStyle.background = selectedColor.hex;
+        } else {
+          containerStyle.backgroundColor = selectedColor.hex;
+        }
+      }
+
       // Ensure container is relative for absolute positioning
       containerClass += ' relative overflow-hidden';
+    } else {
+      // If no background image, just apply the background color directly
+      if (selectedColor) {
+        if (selectedColor.hex.startsWith('linear-gradient')) {
+          containerStyle.background = selectedColor.hex;
+        } else {
+          containerStyle.backgroundColor = selectedColor.hex;
+        }
+      }
     }
 
     return {
