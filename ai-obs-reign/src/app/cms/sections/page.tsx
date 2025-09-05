@@ -302,13 +302,13 @@ export default function CMSSections() {
                   onDragOver={(e) => handleDragOver(e, section.id)}
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, section.id)}
-                  className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border transition-all duration-200 ${
+                  className={`bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg transition-all duration-200 ${
                     isDragging 
-                      ? 'opacity-50 scale-95 border-blue-400 dark:border-blue-500 cursor-grabbing' 
+                      ? 'opacity-50 scale-95 shadow-neumorphic-hover cursor-grabbing' 
                       : isDragOver 
-                      ? 'border-blue-400 dark:border-blue-500 shadow-lg transform -translate-y-1' 
-                      : 'border-gray-200 dark:border-gray-700 hover:shadow-md cursor-grab'
-                  }`}
+                      ? 'shadow-neumorphic-hover transform -translate-y-1' 
+                      : 'shadow-neumorphic hover:shadow-neumorphic-hover cursor-grab'
+                  } border-0`}
                 >
                 {/* Section Header */}
                 <div 
@@ -506,7 +506,7 @@ export default function CMSSections() {
 
         {/* Empty State */}
         {sections.length === 0 && (
-          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
+          <div className="text-center py-12 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic border-0">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
               No dynamic sections yet
             </h3>

@@ -122,7 +122,7 @@ export default function CMSDashboard() {
           {quickStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <div key={index} className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 p-6 rounded-lg shadow-neumorphic border-0">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{stat.label}</p>
@@ -153,7 +153,7 @@ export default function CMSDashboard() {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 group"
+                    className="block p-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic hover:shadow-neumorphic-hover transition-all duration-300 group border-0"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className={`p-3 rounded-lg ${item.color} group-hover:scale-110 transition-transform`}>
@@ -180,7 +180,7 @@ export default function CMSDashboard() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Quick Actions */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic p-6 border-0">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <TrendingUp className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                 Quick Actions
@@ -190,7 +190,7 @@ export default function CMSDashboard() {
                 <Link
                   href="/"
                   target="_blank"
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-lg shadow-neumorphic hover:shadow-neumorphic-hover transition-all duration-300 border-0"
                 >
                   <div className="flex items-center space-x-3">
                     <Eye className="w-4 h-4 text-gray-600 dark:text-gray-400" />
@@ -200,7 +200,7 @@ export default function CMSDashboard() {
                 
                 <Link
                   href="/cms/content"
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-lg shadow-neumorphic hover:shadow-neumorphic-hover transition-all duration-300 border-0"
                 >
                   <div className="flex items-center space-x-3">
                     <Edit className="w-4 h-4 text-gray-600 dark:text-gray-400" />
@@ -211,7 +211,7 @@ export default function CMSDashboard() {
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic p-6 border-0">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <Calendar className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                 Recent Activity

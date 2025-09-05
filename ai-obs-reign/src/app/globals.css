@@ -82,3 +82,72 @@ svg[class*="lucide"] {
   /* color: currentColor !important; */
   stroke: currentColor !important;
 }
+
+/* Neumorphism Shadows */
+.shadow-neumorphic {
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.1),
+    -8px -8px 16px rgba(255, 255, 255, 0.7);
+}
+
+.dark .shadow-neumorphic {
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.4),
+    -8px -8px 16px rgba(255, 255, 255, 0.02);
+}
+
+.shadow-neumorphic-hover {
+  box-shadow: 
+    12px 12px 24px rgba(0, 0, 0, 0.15),
+    -12px -12px 24px rgba(255, 255, 255, 0.8),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dark .shadow-neumorphic-hover {
+  box-shadow: 
+    12px 12px 24px rgba(0, 0, 0, 0.5),
+    -12px -12px 24px rgba(255, 255, 255, 0.03),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Neumorphic Buttons */
+.btn-neumorphic {
+  background: linear-gradient(145deg, #f0f0f0, #cacaca);
+  box-shadow: 
+    6px 6px 12px rgba(0, 0, 0, 0.1),
+    -6px -6px 12px rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.btn-neumorphic:hover {
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.15),
+    -4px -4px 8px rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.btn-neumorphic:active {
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.1),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+  transform: translateY(0);
+}
+
+.dark .btn-neumorphic {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  box-shadow: 
+    6px 6px 12px rgba(0, 0, 0, 0.3),
+    -6px -6px 12px rgba(255, 255, 255, 0.02);
+}
+
+.dark .btn-neumorphic:hover {
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.4),
+    -4px -4px 8px rgba(255, 255, 255, 0.03);
+}
+
+.dark .btn-neumorphic:active {
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.3),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.02);
+}

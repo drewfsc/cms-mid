@@ -158,7 +158,7 @@ const DynamicGridSection: React.FC<DynamicGridSectionProps> = ({ section, isEdit
           {items.map((item, index) => (
             <div
               key={index}
-              className="relative group bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-300"
+              className="relative group bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-neumorphic hover:shadow-neumorphic-hover transition-all duration-300 border-0"
             >
               {isEditMode && (
                 <button
@@ -242,10 +242,10 @@ const DynamicGridSection: React.FC<DynamicGridSectionProps> = ({ section, isEdit
           {isEditMode && (
             <button
               onClick={addItem}
-              className="bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 flex flex-col items-center justify-center hover:border-gray-400 dark:hover:border-gray-500 transition-colors min-h-[200px]"
+              className="bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 shadow-neumorphic hover:shadow-neumorphic-hover rounded-xl p-6 flex flex-col items-center justify-center transition-all duration-300 min-h-[200px] border-0"
             >
-              <Plus className="w-8 h-8 text-gray-400 mb-2" />
-              <span className="text-gray-500 dark:text-gray-400">Add Item</span>
+              <Plus className="w-8 h-8 text-gray-600 dark:text-gray-400 mb-2" />
+              <span className="text-gray-600 dark:text-gray-400">Add Item</span>
             </button>
           )}
         </div>
