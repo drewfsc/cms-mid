@@ -10,8 +10,6 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userDisplayName, setUserDisplayName] = useState('');
-  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-  const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const router = useRouter();
 
   const navigation = [
@@ -110,13 +108,13 @@ const Header = () => {
             ) : (
               <>
                 <button
-                  onClick={() => setIsDemoModalOpen(true)}
+                  onClick={() => {/* TODO: Implement demo modal */}}
                   className="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Request Demo
                 </button>
                 <button
-                  onClick={() => setIsGetStartedModalOpen(true)}
+                  onClick={() => {/* TODO: Implement get started modal */}}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Get Started
@@ -209,7 +207,7 @@ const Header = () => {
                   <>
                     <button
                       onClick={() => {
-                        setIsDemoModalOpen(true);
+                        /* TODO: Implement demo modal */
                         setIsMenuOpen(false);
                       }}
                       className="block text-white/80 hover:text-white px-3 py-2 rounded-md text-base font-medium w-full text-left"
@@ -218,7 +216,7 @@ const Header = () => {
                     </button>
                     <button
                       onClick={() => {
-                        setIsGetStartedModalOpen(true);
+                        /* TODO: Implement get started modal */
                         setIsMenuOpen(false);
                       }}
                       className="block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-base font-medium text-center w-full"
