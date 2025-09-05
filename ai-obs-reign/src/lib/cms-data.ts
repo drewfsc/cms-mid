@@ -491,7 +491,9 @@ export const defaultContactData: ContactSectionData = {
 // Local storage key for CMS data
 export const CMS_STORAGE_KEY = 'reign-cms-data';
 
-// CMS Data Management Functions
+// CMS Data Management
+import { DynamicSection } from './dynamic-sections';
+
 export class CMSDataManager {
   private static useSupabase = false; // Toggle this to true when Supabase is configured
 
@@ -664,5 +666,108 @@ export class CMSDataManager {
     this.resetFeaturesData();
     this.resetSolutionsData();
     this.resetContactData();
+    this.resetDynamicSections();
+  }
+
+  // Dynamic Sections Management
+  static getDynamicSections(): DynamicSection[] {
+    if (typeof window === 'undefined') return [];
+    const data = localStorage.getItem('cms-dynamic-sections');
+    return data ? JSON.parse(data) : [];
+  }
+
+  static saveDynamicSections(sections: DynamicSection[]): void {
+    if (typeof window === 'undefined') return;
+    
+    // Sort sections by order
+    const sortedSections = [...sections].sort((a, b) => a.order - b.order);
+    
+    localStorage.setItem('cms-dynamic-sections', JSON.stringify(sortedSections));
+    localStorage.setItem('cms-dynamic-sections-updated', new Date().toISOString());
+  }
+
+  static addDynamicSection(section: DynamicSection): void {
+    const sections = this.getDynamicSections();
+    
+    // Set order to place new sections after existing dynamic sections
+    // but before the About and Contact sections (which have order 1000+)
+    const maxDynamicOrder = sections.reduce((max, s) => 
+      s.order < 1000 ? Math.max(max, s.order) : max, -1
+    );
+    
+    // If no dynamic sections exist, start at order 0
+    // Otherwise, place after the last dynamic section
+    section.order = maxDynamicOrder < 0 ? 0 : maxDynamicOrder + 1;
+    
+    sections.push(section);
+    this.saveDynamicSections(sections);
+  }
+
+  static updateDynamicSection(id: string, updates: Partial<DynamicSection>): void {
+    const sections = this.getDynamicSections();
+    const index = sections.findIndex(s => s.id === id);
+    
+    if (index !== -1) {
+      sections[index] = {
+        ...sections[index],
+        ...updates,
+        updatedAt: new Date().toISOString()
+      };
+      this.saveDynamicSections(sections);
+    }
+  }
+
+  static deleteDynamicSection(id: string): void {
+    let sections = this.getDynamicSections();
+    sections = sections.filter(s => s.id !== id);
+    
+    // Reorder remaining sections
+    sections.forEach((section, index) => {
+      section.order = index;
+    });
+    
+    this.saveDynamicSections(sections);
+  }
+
+  static reorderDynamicSections(sectionIds: string[]): void {
+    const sections = this.getDynamicSections();
+    const reorderedSections = sectionIds.map((id, index) => {
+      const section = sections.find(s => s.id === id);
+      if (section) {
+        section.order = index;
+      }
+      return section;
+    }).filter(Boolean) as DynamicSection[];
+    
+    this.saveDynamicSections(reorderedSections);
+  }
+
+  static resetDynamicSections(): void {
+    if (typeof window === 'undefined') return;
+    localStorage.removeItem('cms-dynamic-sections');
+    localStorage.removeItem('cms-dynamic-sections-updated');
+  }
+
+  // Get all sections including fixed and dynamic
+  static getAllSections(): Array<{type: 'fixed' | 'dynamic', data: any}> {
+    const sections: Array<{type: 'fixed' | 'dynamic', data: any}> = [];
+    
+    // Add fixed sections
+    sections.push({ type: 'fixed', data: { ...this.getHeroDataSync(), sectionType: 'hero', order: -5 } });
+    sections.push({ type: 'fixed', data: { ...this.getFeaturesDataSync(), sectionType: 'features', order: -4 } });
+    sections.push({ type: 'fixed', data: { ...this.getSolutionsDataSync(), sectionType: 'solutions', order: -3 } });
+    
+    // Add dynamic sections
+    const dynamicSections = this.getDynamicSections();
+    dynamicSections.forEach(section => {
+      sections.push({ type: 'dynamic', data: section });
+    });
+    
+    // Add more fixed sections
+    sections.push({ type: 'fixed', data: { ...this.getAboutDataSync(), sectionType: 'about', order: 1000 } });
+    sections.push({ type: 'fixed', data: { ...this.getContactDataSync(), sectionType: 'contact', order: 1001 } });
+    
+    // Sort by order
+    return sections.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
   }
 }

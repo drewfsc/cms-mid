@@ -11,7 +11,8 @@ import {
   Eye,
   Edit,
   TrendingUp,
-  Calendar
+  Calendar,
+  Layout
 } from 'lucide-react';
 
 export default function CMSDashboard() {
@@ -23,6 +24,14 @@ export default function CMSDashboard() {
       description: 'Edit hero, about, and other page sections',
       color: 'bg-blue-100 text-blue-600',
       stats: '6 sections'
+    },
+    { 
+      name: 'Dynamic Sections', 
+      href: '/cms/sections', 
+      icon: Layout, 
+      description: 'Add and manage custom page sections',
+      color: 'bg-purple-100 text-purple-600',
+      stats: 'Custom layouts'
     },
     { 
       name: 'Features', 
