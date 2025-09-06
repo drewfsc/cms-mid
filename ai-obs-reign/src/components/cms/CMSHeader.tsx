@@ -69,7 +69,7 @@ const CMSHeader: React.FC<CMSHeaderProps> = ({ title, showBackButton = false }) 
                 className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-black dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
+                {/* Back to Dashboard */}
               </Link>
             )}
             

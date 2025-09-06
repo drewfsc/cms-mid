@@ -1,11 +1,11 @@
 // Dynamic section types and interfaces
 
-export type SectionLayout = 'hero' | 'bento' | 'grid' | 'columns' | 'divider' | 'image' | 'code' | 'gallery' | 'form';
+export type SectionLayout = 'hero' | 'bento' | 'grid' | 'columns' | 'divider' | 'image' | 'code' | 'gallery' | 'form' | 'social-feed' | 'charts' | 'video';
 
 export interface SectionField {
   name: string;
   label: string;
-  type: 'text' | 'textarea' | 'rich-text' | 'image' | 'link' | 'select' | 'boolean' | 'list';
+  type: 'text' | 'textarea' | 'rich-text' | 'image' | 'link' | 'select' | 'boolean' | 'list' | 'number' | 'url';
   placeholder?: string;
   required?: boolean;
   options?: string[]; // For select type
@@ -286,6 +286,110 @@ export const SECTION_TEMPLATES: SectionTemplate[] = [
       { name: 'submitText', label: 'Submit Button Text', type: 'text', defaultValue: 'Send Message' },
       { name: 'successMessage', label: 'Success Message', type: 'text', defaultValue: 'Thank you! Your message has been sent.' }
     ]
+  },
+  {
+    layout: 'social-feed',
+    name: 'Social Media Feed',
+    description: 'Display social media posts from LinkedIn, X/Twitter, or other platforms',
+    icon: 'Share2',
+    defaultFields: [
+      { name: 'title', label: 'Section Title', type: 'text', required: true },
+      { name: 'subtitle', label: 'Section Subtitle', type: 'text' },
+      { 
+        name: 'platform', 
+        label: 'Social Platform', 
+        type: 'select', 
+        options: ['linkedin', 'twitter', 'instagram', 'facebook'], 
+        defaultValue: 'linkedin' 
+      },
+      { name: 'username', label: 'Username/Handle', type: 'text', required: true, placeholder: '@username or company-name' },
+      { name: 'socialMediaUrl', label: 'Social Media URL (optional)', type: 'url', placeholder: 'https://linkedin.com/in/username' },
+      { 
+        name: 'postCount', 
+        label: 'Number of Posts', 
+        type: 'number', 
+        defaultValue: 6 
+      },
+      { 
+        name: 'layout', 
+        label: 'Layout Style', 
+        type: 'select', 
+        options: ['grid', 'carousel', 'timeline'], 
+        defaultValue: 'grid' 
+      },
+      { name: 'showProfile', label: 'Show Profile Info', type: 'boolean', defaultValue: true },
+      { name: 'showEngagement', label: 'Show Likes/Comments', type: 'boolean', defaultValue: true },
+      { name: 'autoRefresh', label: 'Auto Refresh Feed', type: 'boolean', defaultValue: false }
+    ]
+  },
+  {
+    layout: 'charts',
+    name: 'Charts & Analytics',
+    description: 'Interactive charts and graphs powered by Google Sheets data',
+    icon: 'BarChart3',
+    defaultFields: [
+      { name: 'title', label: 'Section Title', type: 'text', required: true },
+      { name: 'subtitle', label: 'Section Subtitle', type: 'text' },
+      { 
+        name: 'chartType', 
+        label: 'Chart Type', 
+        type: 'select', 
+        options: ['bar', 'line', 'pie', 'area', 'scatter', 'donut', 'gauge'], 
+        defaultValue: 'bar' 
+      },
+      { name: 'googleSheetUrl', label: 'Google Sheets URL', type: 'url', required: true, placeholder: 'https://docs.google.com/spreadsheets/d/...' },
+      { name: 'sheetName', label: 'Sheet Name', type: 'text', defaultValue: 'Sheet1' },
+      { name: 'dataRange', label: 'Data Range', type: 'text', placeholder: 'A1:C10' },
+      { 
+        name: 'chartHeight', 
+        label: 'Chart Height (px)', 
+        type: 'number', 
+        defaultValue: 400 
+      },
+      { name: 'showLegend', label: 'Show Legend', type: 'boolean', defaultValue: true },
+      { name: 'showTooltips', label: 'Show Tooltips', type: 'boolean', defaultValue: true },
+      { name: 'animation', label: 'Enable Animations', type: 'boolean', defaultValue: true },
+      { 
+        name: 'refreshInterval', 
+        label: 'Auto Refresh (minutes)', 
+        type: 'number', 
+        defaultValue: 0,
+        placeholder: '0 = no auto refresh'
+      },
+      { name: 'enableAI', label: 'Enable AI Analysis', type: 'boolean', defaultValue: true }
+    ]
+  },
+  {
+    layout: 'video',
+    name: 'Video Section',
+    description: 'Embed videos from YouTube, Vimeo, or upload custom videos',
+    icon: 'Play',
+    defaultFields: [
+      { name: 'title', label: 'Section Title', type: 'text' },
+      { name: 'subtitle', label: 'Section Subtitle', type: 'text' },
+      { 
+        name: 'videoType', 
+        label: 'Video Source', 
+        type: 'select', 
+        options: ['youtube', 'vimeo', 'upload', 'url'], 
+        defaultValue: 'youtube' 
+      },
+      { name: 'videoUrl', label: 'Video URL', type: 'url', placeholder: 'YouTube/Vimeo URL or direct video URL' },
+      { name: 'videoFile', label: 'Upload Video File', type: 'image' }, // Using image type for file upload
+      { 
+        name: 'aspectRatio', 
+        label: 'Aspect Ratio', 
+        type: 'select', 
+        options: ['16:9', '4:3', '1:1', '21:9'], 
+        defaultValue: '16:9' 
+      },
+      { name: 'autoplay', label: 'Autoplay Video', type: 'boolean', defaultValue: false },
+      { name: 'muted', label: 'Start Muted', type: 'boolean', defaultValue: true },
+      { name: 'loop', label: 'Loop Video', type: 'boolean', defaultValue: false },
+      { name: 'showControls', label: 'Show Video Controls', type: 'boolean', defaultValue: true },
+      { name: 'posterImage', label: 'Poster Image (thumbnail)', type: 'image' },
+      { name: 'caption', label: 'Video Caption', type: 'text' }
+    ]
   }
 ];
 
@@ -358,6 +462,24 @@ export function createSection(template: SectionTemplate, name: string): DynamicS
         return {
           backgroundColor: 'white',
           textColor: 'auto',
+          padding: 'large'
+        };
+      case 'social-feed':
+        return {
+          backgroundColor: 'gray-50',
+          textColor: 'auto',
+          padding: 'large'
+        };
+      case 'charts':
+        return {
+          backgroundColor: 'white',
+          textColor: 'auto',
+          padding: 'large'
+        };
+      case 'video':
+        return {
+          backgroundColor: 'gray-900',
+          textColor: 'light',
           padding: 'large'
         };
       default:

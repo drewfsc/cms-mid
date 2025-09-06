@@ -13,6 +13,9 @@ import DynamicImageSection from './dynamic/DynamicImageSection';
 import DynamicCodeSection from './dynamic/DynamicCodeSection';
 import DynamicGallerySection from './dynamic/DynamicGallerySection';
 import DynamicFormSection from './dynamic/DynamicFormSection';
+import DynamicSocialFeedSection from './dynamic/DynamicSocialFeedSection';
+import DynamicChartsSection from './dynamic/DynamicChartsSection';
+import DynamicVideoSection from './dynamic/DynamicVideoSection';
 
 interface DynamicSectionRendererProps {
   sections: DynamicSection[];
@@ -48,6 +51,12 @@ const DynamicSectionRenderer: React.FC<DynamicSectionRendererProps> = ({ section
         return <DynamicGallerySection key={section.id} {...sectionProps} />;
       case 'form':
         return <DynamicFormSection key={section.id} {...sectionProps} />;
+      case 'social-feed':
+        return <DynamicSocialFeedSection key={section.id} {...sectionProps} />;
+      case 'charts':
+        return <DynamicChartsSection key={section.id} {...sectionProps} />;
+      case 'video':
+        return <DynamicVideoSection key={section.id} {...sectionProps} />;
       default:
         return null;
     }

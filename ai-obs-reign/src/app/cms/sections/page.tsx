@@ -26,7 +26,10 @@ import {
   Filter,
   X,
   CheckSquare,
-  Square
+  Square,
+  Play,
+  BarChart3,
+  Share2
 } from 'lucide-react';
 
 // Import section components
@@ -39,6 +42,9 @@ import DynamicImageSection from '@/components/sections/dynamic/DynamicImageSecti
 import DynamicCodeSection from '@/components/sections/dynamic/DynamicCodeSection';
 import DynamicGallerySection from '@/components/sections/dynamic/DynamicGallerySection';
 import DynamicFormSection from '@/components/sections/dynamic/DynamicFormSection';
+import DynamicVideoSection from '@/components/sections/dynamic/DynamicVideoSection';
+import DynamicChartsSection from '@/components/sections/dynamic/DynamicChartsSection';
+import DynamicSocialFeedSection from '@/components/sections/dynamic/DynamicSocialFeedSection';
 
 export default function CMSSections() {
   const [sections, setSections] = useState<DynamicSection[]>([]);
@@ -399,6 +405,12 @@ export default function CMSSections() {
         return <DynamicGallerySection {...sectionProps} />;
       case 'form':
         return <DynamicFormSection {...sectionProps} />;
+      case 'video':
+        return <DynamicVideoSection {...sectionProps} />;
+      case 'charts':
+        return <DynamicChartsSection {...sectionProps} />;
+      case 'social-feed':
+        return <DynamicSocialFeedSection {...sectionProps} />;
       default:
         return <div>Unknown section type</div>;
     }
@@ -476,6 +488,9 @@ export default function CMSSections() {
                       case 'code': return Code;
                       case 'gallery': return Images;
                       case 'form': return FileText;
+                      case 'video': return Play;
+                      case 'charts': return BarChart3;
+                      case 'social-feed': return Share2;
                       default: return Layout;
                     }
                   };
@@ -492,6 +507,9 @@ export default function CMSSections() {
                       case 'code': return 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300';
                       case 'gallery': return 'bg-teal-100 text-teal-600 dark:bg-teal-900 dark:text-teal-300';
                       case 'form': return 'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300';
+                      case 'video': return 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300';
+                      case 'charts': return 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300';
+                      case 'social-feed': return 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900 dark:text-cyan-300';
                       default: return 'bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-300';
                     }
                   };
@@ -592,6 +610,9 @@ export default function CMSSections() {
                     <option value="code">Code Block</option>
                     <option value="gallery">Gallery</option>
                     <option value="form">Contact Form</option>
+                    <option value="video">Video</option>
+                    <option value="charts">Charts & Analytics</option>
+                    <option value="social-feed">Social Media Feed</option>
                   </select>
                 </div>
 

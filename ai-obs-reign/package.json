@@ -17,6 +17,7 @@
     "@tiptap/pm": "^2.8.0",
     "@tiptap/react": "^2.8.0",
     "@tiptap/starter-kit": "^2.8.0",
+    "chart.js": "^4.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.542.0",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/chart.js": "^2.9.41",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
