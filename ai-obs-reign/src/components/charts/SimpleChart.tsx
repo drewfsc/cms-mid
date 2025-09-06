@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 'use client';
 
 
@@ -153,9 +151,12 @@ const SimpleChart: React.FC<SimpleChartProps> = ({
 
   return (
     <div className={className} style={{ height: `${height}px` }}>
-      {chartType === 'bar' && <Bar {...chartProps} />}
-      {chartType === 'line' && <Line {...chartProps} />}
-      {chartType === 'pie' && <Pie {...chartProps} />}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {chartType === 'bar' && <Bar {...(chartProps as any)} />}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {chartType === 'line' && <Line {...(chartProps as any)} />}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {chartType === 'pie' && <Pie {...(chartProps as any)} />}
     </div>
   );
 };
