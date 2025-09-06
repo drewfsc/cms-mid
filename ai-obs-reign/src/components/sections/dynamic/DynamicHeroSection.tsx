@@ -73,7 +73,7 @@ const DynamicHeroSection: React.FC<DynamicHeroSectionProps> = ({ section, isEdit
           )}
 
           {/* Title */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold mb-6 ${SectionStylingUtils.getHeadingColorClasses(sectionStyling)}`}>
             {isEditMode ? (
               <input
                 type="text"
@@ -89,7 +89,7 @@ const DynamicHeroSection: React.FC<DynamicHeroSectionProps> = ({ section, isEdit
 
           {/* Subtitle */}
           {(fields.subtitle || isEditMode) && (
-            <h2 className="text-xl md:text-2xl text-blue-400 mb-6">
+            <h2 className={`text-xl md:text-2xl mb-6 ${SectionStylingUtils.getSubheadingColorClasses(sectionStyling)}`}>
               {isEditMode ? (
                 <input
                   type="text"
@@ -105,7 +105,7 @@ const DynamicHeroSection: React.FC<DynamicHeroSectionProps> = ({ section, isEdit
           )}
 
           {/* Description */}
-          <div className="text-lg text-gray-300 mb-10 max-w-3xl mx-auto">
+          <div className={`text-lg mb-10 max-w-3xl mx-auto ${SectionStylingUtils.getBodyTextColorClasses(sectionStyling)}`}>
             {isEditMode ? (
               <textarea
                 value={fields.description || ''}

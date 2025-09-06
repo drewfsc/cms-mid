@@ -131,6 +131,50 @@ export class SectionStylingUtils {
   static getContrastTextColor(colorId: string): 'light' | 'dark' {
     return this.isLightBackground(colorId) ? 'dark' : 'light';
   }
+
+  static getTextColorClasses(styling: SectionStyling): string {
+    switch (styling.textColor) {
+      case 'light':
+        return 'text-white';
+      case 'dark':
+        return 'text-gray-900';
+      default:
+        return 'text-gray-900 dark:text-white';
+    }
+  }
+
+  static getHeadingColorClasses(styling: SectionStyling): string {
+    switch (styling.textColor) {
+      case 'light':
+        return 'text-white';
+      case 'dark':
+        return 'text-gray-900';
+      default:
+        return 'text-gray-900 dark:text-white';
+    }
+  }
+
+  static getSubheadingColorClasses(styling: SectionStyling): string {
+    switch (styling.textColor) {
+      case 'light':
+        return 'text-blue-300';
+      case 'dark':
+        return 'text-blue-600';
+      default:
+        return 'text-blue-600 dark:text-blue-400';
+    }
+  }
+
+  static getBodyTextColorClasses(styling: SectionStyling): string {
+    switch (styling.textColor) {
+      case 'light':
+        return 'text-gray-200';
+      case 'dark':
+        return 'text-gray-700';
+      default:
+        return 'text-gray-700 dark:text-gray-300';
+    }
+  }
 }
 
 // Hook for parallax scrolling

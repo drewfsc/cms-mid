@@ -3,6 +3,7 @@
 import React from 'react';
 import { CheckCircle, Plus, Trash2 } from 'lucide-react';
 import { DynamicSection } from '@/lib/dynamic-sections';
+import { SectionStylingUtils, useParallaxScroll } from '@/lib/section-styling';
 
 interface DynamicColumnsSectionProps {
   section: DynamicSection;
@@ -47,7 +48,7 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
 
   const textContent = (
     <div className="space-y-6">
-      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+      <h2 className={`text-3xl md:text-4xl font-bold ${SectionStylingUtils.getHeadingColorClasses(sectionStyling)}`}>
         {isEditMode ? (
           <input
             type="text"
@@ -62,7 +63,7 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
       </h2>
 
       {(fields.subtitle || isEditMode) && (
-        <h3 className="text-xl text-blue-600 dark:text-blue-400">
+        <h3 className={`text-xl ${SectionStylingUtils.getSubheadingColorClasses(sectionStyling)}`}>
           {isEditMode ? (
             <input
               type="text"
@@ -77,7 +78,7 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
         </h3>
       )}
 
-      <div className="prose prose-lg dark:prose-invert max-w-none">
+      <div className={`prose prose-lg dark:prose-invert max-w-none ${SectionStylingUtils.getBodyTextColorClasses(sectionStyling)}`}>
         {isEditMode ? (
           <textarea
             value={fields.content || ''}
@@ -113,7 +114,7 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
                   </button>
                 </>
               ) : (
-                <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                <span className={SectionStylingUtils.getBodyTextColorClasses(sectionStyling)}>{feature}</span>
               )}
             </div>
           ))}

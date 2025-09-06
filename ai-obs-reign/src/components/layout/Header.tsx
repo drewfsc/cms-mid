@@ -84,6 +84,40 @@ const Header = () => {
     router.push('/');
   };
 
+  const handleNavigationClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    
+    if (href === '/') {
+      // Handle home link normally
+      router.push('/');
+      return;
+    }
+    
+    // Handle section links with proper scrolling
+    if (href.startsWith('#')) {
+      const sectionId = href.substring(1);
+      const element = document.getElementById(sectionId);
+      
+      if (element) {
+        // Get header height (64px = h-16)
+        const headerHeight = 64;
+        
+        // Calculate the position where the top of the section should be
+        const elementPosition = element.offsetTop;
+        const offsetPosition = elementPosition - headerHeight;
+        
+        // Smooth scroll to the calculated position
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+    
+    // Close mobile menu if open
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="fixed top-0 w-full bg-white/10 backdrop-blur-md border-b border-white/20 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,13 +143,14 @@ const Header = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => (
-              <Link
+              <a
                 key={item.name}
                 href={item.href}
-                className="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                onClick={(e) => handleNavigationClick(e, item.href)}
+                className="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer"
               >
                 {item.name}
-              </Link>
+              </a>
             ))}
           </div>
 
@@ -205,14 +240,14 @@ const Header = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-black/20 backdrop-blur-md border-t border-white/20">
               {navigation.map((item) => (
-                <Link
+                <a
                   key={item.name}
                   href={item.href}
-                  className="text-white/80 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => handleNavigationClick(e, item.href)}
+                  className="text-white/80 hover:text-white block px-3 py-2 rounded-md text-base font-medium cursor-pointer"
                 >
                   {item.name}
-                </Link>
+                </a>
               ))}
               <div className="pt-4 space-y-2">
                 {isLoggedIn ? (
