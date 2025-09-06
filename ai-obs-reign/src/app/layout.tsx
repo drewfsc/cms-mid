@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { DarkModeProvider } from '@/lib/dark-mode-context';
+import AppWrapper from '@/components/AppWrapper';
 
 
 const inter = Inter({
@@ -24,7 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased bg-black`}>
         <DarkModeProvider forceMode="dark">
-          {children}
+          <AppWrapper showLoader={true} loaderDelay={3000}>
+            {children}
+          </AppWrapper>
         </DarkModeProvider>
       </body>
     </html>
