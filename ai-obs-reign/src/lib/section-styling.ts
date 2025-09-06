@@ -175,6 +175,29 @@ export class SectionStylingUtils {
         return 'text-gray-700 dark:text-gray-300';
     }
   }
+
+  static getCardStyles(styling: SectionStyling): {
+    borderRadius: string;
+    opacity: string;
+  } {
+    const borderRadius = styling.cardBorderRadius || 8;
+    const opacity = styling.cardOpacity || 100;
+    
+    return {
+      borderRadius: `rounded-[${borderRadius}px]`,
+      opacity: `opacity-${opacity}`
+    };
+  }
+
+  static getCardStyleProperties(styling: SectionStyling): React.CSSProperties {
+    const borderRadius = styling.cardBorderRadius || 8;
+    const opacity = (styling.cardOpacity || 100) / 100;
+    
+    return {
+      borderRadius: `${borderRadius}px`,
+      opacity: opacity
+    };
+  }
 }
 
 // Hook for parallax scrolling

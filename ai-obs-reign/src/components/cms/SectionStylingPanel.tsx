@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Palette, Image, Eye, Move, Layers } from 'lucide-react';
+import { Palette, Image, Eye, Move, Layers, CornerDownRight, Circle } from 'lucide-react';
 import { SectionStyling } from '@/lib/dynamic-sections';
 import { SiteConfigManager, SiteColors } from '@/lib/site-config';
 
@@ -227,6 +227,54 @@ const SectionStylingPanel: React.FC<SectionStylingPanelProps> = ({
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Card Border Radius */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Card Border Radius: {styling.cardBorderRadius || 8}px
+            </label>
+            <div className="flex items-center space-x-3">
+              <CornerDownRight className="w-4 h-4 text-gray-400" />
+              <input
+                type="range"
+                min="0"
+                max="24"
+                value={styling.cardBorderRadius || 8}
+                onChange={(e) => handleStylingChange('cardBorderRadius', parseInt(e.target.value))}
+                className="flex-1"
+              />
+              <span className="text-sm text-gray-600 dark:text-gray-400 w-12 text-right">
+                {styling.cardBorderRadius || 8}px
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Controls the rounded corners of cards and containers within this section
+            </p>
+          </div>
+
+          {/* Card Opacity */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Card Opacity: {styling.cardOpacity || 100}%
+            </label>
+            <div className="flex items-center space-x-3">
+              <Circle className="w-4 h-4 text-gray-400" />
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={styling.cardOpacity || 100}
+                onChange={(e) => handleStylingChange('cardOpacity', parseInt(e.target.value))}
+                className="flex-1"
+              />
+              <span className="text-sm text-gray-600 dark:text-gray-400 w-12 text-right">
+                {styling.cardOpacity || 100}%
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Controls the transparency of cards and containers within this section
+            </p>
           </div>
         </div>
       )}

@@ -61,6 +61,7 @@ export default function CMSSections() {
   });
   const [selectedSections, setSelectedSections] = useState<Set<string>>(new Set());
   const [showBulkActions, setShowBulkActions] = useState(false);
+  const [stylingPanelOpen, setStylingPanelOpen] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     loadSections();
@@ -156,6 +157,13 @@ export default function CMSSections() {
     CMSDataManager.updateDynamicSection(sectionId, { name });
     loadSections();
     setHasChanges(true);
+  };
+
+  const toggleStylingPanel = (sectionId: string) => {
+    setStylingPanelOpen(prev => ({
+      ...prev,
+      [sectionId]: !prev[sectionId]
+    }));
   };
 
   const handleFilterChange = (filterType: 'visibility' | 'type' | 'navigation', value: string) => {
@@ -459,7 +467,7 @@ export default function CMSSections() {
           {/* Left Side - Section Types */}
           <div className="space-y-6 col-span-1">
             <div>
-              <div className="flex justify-between">
+              <div className="flex justify-between gap-3">
                 <div>
                     <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Section Types</h2>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
@@ -469,7 +477,7 @@ export default function CMSSections() {
                 <div className="flex items-center space-x-3">
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg btn-neumorphic hover:from-blue-600 hover:to-blue-700 flex items-center space-x-2 border-0"
+                    className="px-2 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white text rounded-lg btn-neumorphic hover:from-blue-600 hover:to-blue-700 flex items-center space-x-2 border-0"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add Section</span>
@@ -1053,8 +1061,8 @@ export default function CMSSections() {
                       <SectionStylingPanel
                         styling={section.styling}
                         onUpdate={(styling) => handleUpdateSectionStyling(section.id, styling)}
-                        isOpen={true}
-                        onToggle={() => {}} // Always open in edit mode
+                        isOpen={stylingPanelOpen[section.id] || false}
+                        onToggle={() => toggleStylingPanel(section.id)}
                       />
                     </div>
 

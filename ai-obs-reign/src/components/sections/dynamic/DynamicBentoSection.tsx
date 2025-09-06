@@ -29,7 +29,9 @@ const DynamicBentoSection: React.FC<DynamicBentoSectionProps> = ({ section, isEd
     backgroundColor: 'gray-900',
     imageOpacity: 20,
     textColor: 'light' as const,
-    padding: 'large' as const
+    padding: 'large' as const,
+    cardBorderRadius: 16,
+    cardOpacity: 95
   };
   
   const sectionStyling = styling || fallbackStyling;
@@ -84,6 +86,18 @@ const DynamicBentoSection: React.FC<DynamicBentoSectionProps> = ({ section, isEd
     return colors[color] || colors.blue;
   };
 
+  const getBackgroundColorWithOpacity = (color: string, opacity: number) => {
+    const opacityValue = opacity / 100;
+    const colors: Record<string, string> = {
+      blue: `linear-gradient(to bottom right, rgba(59, 130, 246, ${opacityValue}), rgba(37, 99, 235, ${opacityValue}))`,
+      purple: `linear-gradient(to bottom right, rgba(147, 51, 234, ${opacityValue}), rgba(126, 34, 206, ${opacityValue}))`,
+      green: `linear-gradient(to bottom right, rgba(34, 197, 94, ${opacityValue}), rgba(22, 163, 74, ${opacityValue}))`,
+      orange: `linear-gradient(to bottom right, rgba(249, 115, 22, ${opacityValue}), rgba(234, 88, 12, ${opacityValue}))`,
+      pink: `linear-gradient(to bottom right, rgba(236, 72, 153, ${opacityValue}), rgba(219, 39, 119, ${opacityValue}))`,
+    };
+    return colors[color] || colors.blue;
+  };
+
   return (
     <section id={section.id} className="py-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -125,7 +139,11 @@ const DynamicBentoSection: React.FC<DynamicBentoSectionProps> = ({ section, isEd
           {cards.map((card, index) => (
             <div
               key={index}
-              className={`relative ${getSizeClasses(card.size)} ${getColorClasses(card.color)} rounded-2xl p-6 transition-all duration-300 group border-0`}
+              className={`relative ${getSizeClasses(card.size)} transition-all duration-300 group border-0 shadow-neumorphic hover:shadow-neumorphic-hover`}
+              style={{
+                borderRadius: `${sectionStyling.cardBorderRadius || 16}px`,
+                background: getBackgroundColorWithOpacity(card.color, sectionStyling.cardOpacity || 95)
+              }}
             >
               {isEditMode && (
                 <button
@@ -137,7 +155,7 @@ const DynamicBentoSection: React.FC<DynamicBentoSectionProps> = ({ section, isEd
               )}
 
               {/* Card Content */}
-              <div className="h-full flex flex-col">
+              <div className="h-full flex flex-col p-6">
                 {/* Icon */}
                 {card.icon && (
                   <div className="text-2xl mb-2">
@@ -238,7 +256,11 @@ const DynamicBentoSection: React.FC<DynamicBentoSectionProps> = ({ section, isEd
           {isEditMode && (
             <button
               onClick={addCard}
-              className="col-span-1 row-span-1 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 shadow-neumorphic hover:shadow-neumorphic-hover rounded-2xl flex items-center justify-center transition-all duration-300 border-0"
+              className="col-span-1 row-span-1 shadow-neumorphic hover:shadow-neumorphic-hover transition-all duration-300 border-0 flex items-center justify-center"
+              style={{
+                borderRadius: `${sectionStyling.cardBorderRadius || 16}px`,
+                background: `linear-gradient(to bottom right, rgba(209, 213, 219, ${(sectionStyling.cardOpacity || 95) / 100}), rgba(156, 163, 175, ${(sectionStyling.cardOpacity || 95) / 100}))`
+              }}
             >
               <div className="text-center">
                 <Plus className="w-8 h-8 text-gray-600 dark:text-gray-400 mx-auto mb-2" />

@@ -19,6 +19,8 @@ export interface SectionStyling {
   enableParallax?: boolean; // Enable parallax effect for background image
   textColor?: 'light' | 'dark' | 'auto'; // Text color theme
   padding?: 'none' | 'small' | 'medium' | 'large'; // Section padding
+  cardBorderRadius?: number; // 0-24, border radius for cards/containers
+  cardOpacity?: number; // 0-100, opacity for cards/containers
 }
 
 export interface DynamicSection {
@@ -413,80 +415,106 @@ export function createSection(template: SectionTemplate, name: string): DynamicS
           imageOpacity: 40,
           enableParallax: true,
           textColor: 'light',
-          padding: 'large'
+          padding: 'large',
+          cardBorderRadius: 12,
+          cardOpacity: 100
         };
       case 'bento':
         return {
           backgroundColor: 'gray-900',
           imageOpacity: 20,
           textColor: 'light',
-          padding: 'large'
+          padding: 'large',
+          cardBorderRadius: 16,
+          cardOpacity: 95
         };
       case 'grid':
         return {
           backgroundColor: 'gray-50',
           textColor: 'auto',
-          padding: 'large'
+          padding: 'large',
+          cardBorderRadius: 8,
+          cardOpacity: 100
         };
       case 'columns':
         return {
           backgroundColor: 'white',
           textColor: 'auto',
-          padding: 'large'
+          padding: 'large',
+          cardBorderRadius: 12,
+          cardOpacity: 100
         };
       case 'divider':
         return {
           backgroundColor: 'white',
           textColor: 'auto',
-          padding: 'small'
+          padding: 'small',
+          cardBorderRadius: 0,
+          cardOpacity: 100
         };
       case 'image':
         return {
           backgroundColor: 'white',
           textColor: 'auto',
-          padding: 'medium'
+          padding: 'medium',
+          cardBorderRadius: 8,
+          cardOpacity: 100
         };
       case 'code':
         return {
           backgroundColor: 'gray-900',
           textColor: 'light',
-          padding: 'medium'
+          padding: 'medium',
+          cardBorderRadius: 8,
+          cardOpacity: 100
         };
       case 'gallery':
         return {
           backgroundColor: 'gray-50',
           textColor: 'auto',
-          padding: 'large'
+          padding: 'large',
+          cardBorderRadius: 12,
+          cardOpacity: 100
         };
       case 'form':
         return {
           backgroundColor: 'white',
           textColor: 'auto',
-          padding: 'large'
+          padding: 'large',
+          cardBorderRadius: 16,
+          cardOpacity: 100
         };
       case 'social-feed':
         return {
           backgroundColor: 'gray-50',
           textColor: 'auto',
-          padding: 'large'
+          padding: 'large',
+          cardBorderRadius: 12,
+          cardOpacity: 100
         };
       case 'charts':
         return {
           backgroundColor: 'white',
           textColor: 'auto',
-          padding: 'large'
+          padding: 'large',
+          cardBorderRadius: 12,
+          cardOpacity: 100
         };
       case 'video':
         return {
           backgroundColor: 'gray-900',
           textColor: 'light',
-          padding: 'large'
+          padding: 'large',
+          cardBorderRadius: 12,
+          cardOpacity: 100
         };
       default:
         return {
           backgroundColor: 'white',
           textColor: 'auto',
-          padding: 'medium'
+          padding: 'medium',
+          cardBorderRadius: 8,
+          cardOpacity: 100
         };
     }
   };
