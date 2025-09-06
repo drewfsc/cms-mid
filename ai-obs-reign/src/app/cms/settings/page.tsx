@@ -143,7 +143,7 @@ export default function CMSSettings() {
             <div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Current Icon</h3>
               <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center">
+                <div className="w-16 h-16 rounded-lg flex items-center justify-center">
                   {siteIcon ? (
                     <img 
                       src={siteIcon} 

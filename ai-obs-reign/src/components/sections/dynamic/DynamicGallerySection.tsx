@@ -234,99 +234,146 @@ const DynamicGallerySection: React.FC<DynamicGallerySectionProps> = ({ section, 
           </div>
         )}
 
-        {/* Gallery Grid */}
-        <div className={`grid ${getGridColumns()} gap-6`}>
-          {images.map((image, index) => (
-            <div key={index} className="group relative">
-              {isEditMode && (
-                <button
-                  onClick={() => removeImage(index)}
-                  className="absolute top-2 right-2 z-10 p-1 bg-red-500/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              )}
+        {/* Gallery Carousel */}
+        <div className="relative">
+          {/* Main Carousel Container */}
+          <div className="relative overflow-hidden rounded-lg shadow-neumorphic">
+            <div className="flex transition-transform duration-300 ease-in-out" style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}>
+              {images.map((image, index) => (
+                <div key={index} className="w-full flex-shrink-0 relative group">
+                  {isEditMode && (
+                    <button
+                      onClick={() => removeImage(index)}
+                      className="absolute top-4 right-4 z-20 p-2 bg-red-500/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
 
-              <div className="relative overflow-hidden rounded-lg shadow-neumorphic hover:shadow-neumorphic-hover transition-all duration-300">
-                {image.url ? (
-                  <>
-                    <img
-                      src={image.url}
-                      alt={image.alt || 'Gallery image'}
-                      className="w-full h-64 object-cover cursor-pointer"
-                      onClick={() => {
-                        console.log('Image clicked:', index);
-                        openLightbox(index);
-                      }}
-                    />
-                    {fields.enableLightbox !== false && !isEditMode && (
-                      <div 
-                        className="absolute inset-0 bg-black/0 hover:bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-all duration-300 cursor-pointer"
-                        onClick={() => {
-                          console.log('Overlay clicked:', index);
-                          openLightbox(index);
-                        }}
-                      >
-                        <ZoomIn className="w-8 h-8 text-white" />
+                  <div className="relative">
+                    {image.url ? (
+                      <>
+                        <img
+                          src={image.url}
+                          alt={image.alt || 'Gallery image'}
+                          className="w-full h-96 md:h-[500px] object-cover cursor-pointer"
+                          onClick={() => {
+                            console.log('Image clicked:', index);
+                            openLightbox(index);
+                          }}
+                        />
+                        {fields.enableLightbox !== false && !isEditMode && (
+                          <div 
+                            className="absolute inset-0 bg-black/0 hover:bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-all duration-300 cursor-pointer"
+                            onClick={() => {
+                              console.log('Overlay clicked:', index);
+                              openLightbox(index);
+                            }}
+                          >
+                            <ZoomIn className="w-12 h-12 text-white" />
+                          </div>
+                        )}
+                      </>
+                    ) : isEditMode ? (
+                      <div className="w-full h-96 md:h-[500px] bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <p className="text-gray-500 dark:text-gray-400 text-lg">No image</p>
+                      </div>
+                    ) : null}
+
+                    {image.caption && (fields.showCaptions !== false || isEditMode) && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                        <p className="text-white text-lg font-medium">
+                          {isEditMode ? (
+                            <input
+                              type="text"
+                              value={image.caption}
+                              onChange={(e) => handleImageChange(index, 'caption', e.target.value)}
+                              className="w-full bg-gray-800/50 border border-gray-600 rounded px-3 py-2 text-white outline-none focus:border-blue-400"
+                              placeholder="Image caption"
+                            />
+                          ) : (
+                            image.caption
+                          )}
+                        </p>
                       </div>
                     )}
-                  </>
-                ) : isEditMode ? (
-                  <div className="w-full h-64 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">No image</p>
                   </div>
-                ) : null}
-
-                {image.caption && (fields.showCaptions !== false || isEditMode) && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <p className="text-white text-sm">
-                      {isEditMode ? (
-                        <input
-                          type="text"
-                          value={image.caption}
-                          onChange={(e) => handleImageChange(index, 'caption', e.target.value)}
-                          className="w-full bg-gray-800/50 border border-gray-600 rounded px-2 py-1 text-white outline-none focus:border-blue-400"
-                          placeholder="Image caption"
-                        />
-                      ) : (
-                        image.caption
-                      )}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Edit Mode Image Controls */}
-              {isEditMode && (
-                <div className="mt-3 space-y-2">
-                  <input
-                    type="text"
-                    value={image.url}
-                    onChange={(e) => handleImageChange(index, 'url', e.target.value)}
-                    className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white text-sm"
-                    placeholder="Image URL"
-                  />
-                  <input
-                    type="text"
-                    value={image.alt}
-                    onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
-                    className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white text-sm"
-                    placeholder="Alt text"
-                  />
                 </div>
-              )}
+              ))}
             </div>
-          ))}
 
-          {/* Add Image Button */}
+            {/* Carousel Navigation Arrows */}
+            {images.length > 1 && !isEditMode && (
+              <>
+                <button
+                  onClick={() => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 text-white rounded-full transition-colors z-10"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={() => setCurrentImageIndex((prev) => (prev + 1) % images.length)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 text-white rounded-full transition-colors z-10"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </>
+            )}
+
+            {/* Carousel Indicators */}
+            {images.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                {images.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`w-3 h-3 rounded-full transition-colors ${
+                      index === currentImageIndex 
+                        ? 'bg-white' 
+                        : 'bg-white/50 hover:bg-white/70'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Edit Mode Image Controls */}
           {isEditMode && (
-            <button
-              onClick={addImage}
-              className="h-64 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 shadow-neumorphic hover:shadow-neumorphic-hover rounded-lg flex flex-col items-center justify-center transition-all duration-300 border-0"
-            >
-              <Plus className="w-8 h-8 text-gray-600 dark:text-gray-400 mb-2" />
-              <span className="text-gray-600 dark:text-gray-400 text-sm">Add Image</span>
-            </button>
+            <div className="mt-6 space-y-4">
+              {images.map((image, index) => (
+                <div key={index} className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    Image {index + 1}
+                  </h4>
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      value={image.url}
+                      onChange={(e) => handleImageChange(index, 'url', e.target.value)}
+                      className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white text-sm"
+                      placeholder="Image URL"
+                    />
+                    <input
+                      type="text"
+                      value={image.alt}
+                      onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
+                      className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white text-sm"
+                      placeholder="Alt text"
+                    />
+                  </div>
+                </div>
+              ))}
+
+              {/* Add Image Button */}
+              <button
+                onClick={addImage}
+                className="w-full h-32 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 shadow-neumorphic hover:shadow-neumorphic-hover rounded-lg flex flex-col items-center justify-center transition-all duration-300 border-0"
+              >
+                <Plus className="w-8 h-8 text-gray-600 dark:text-gray-400 mb-2" />
+                <span className="text-gray-600 dark:text-gray-400 text-sm">Add Image</span>
+              </button>
+            </div>
           )}
         </div>
 
