@@ -34,6 +34,8 @@ const DynamicVideoSection: React.FC<DynamicVideoSectionProps> = ({
   const showControls = section.fields.showControls as boolean ?? true;
   const posterImage = section.fields.posterImage as string || '';
   const caption = section.fields.caption as string || '';
+  const layout = section.fields.layout as string || 'full-video';
+  const textContent = section.fields.textContent as string || '';
 
   // Extract video ID from YouTube/Vimeo URLs with enhanced validation
   const extractVideoId = (url: string, platform: string): string | null => {
@@ -337,6 +339,21 @@ const DynamicVideoSection: React.FC<DynamicVideoSectionProps> = ({
             
             <div>
               <label className="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
+                Layout
+              </label>
+              <select
+                value={layout}
+                onChange={(e) => onUpdate?.({ layout: e.target.value })}
+                className="w-full px-3 py-2 border border-blue-300 dark:border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              >
+                <option value="full-video">Full Video</option>
+                <option value="half-text-left">Half Text Left</option>
+                <option value="half-text-right">Half Text Right</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
                 Video URL
               </label>
               <input
@@ -350,6 +367,24 @@ const DynamicVideoSection: React.FC<DynamicVideoSectionProps> = ({
                 Paste YouTube, Vimeo, or direct video URL
               </p>
             </div>
+            
+            {(layout === 'half-text-left' || layout === 'half-text-right') && (
+              <div>
+                <label className="block text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
+                  Text Content
+                </label>
+                <textarea
+                  value={textContent}
+                  onChange={(e) => onUpdate?.({ textContent: e.target.value })}
+                  rows={6}
+                  className="w-full px-3 py-2 border border-blue-300 dark:border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  placeholder="Enter text content for the half-text layout..."
+                />
+                <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                  This text will appear alongside the video in the half-text layout
+                </p>
+              </div>
+            )}
           </div>
           
           {/* Display Settings */}
@@ -433,25 +468,113 @@ const DynamicVideoSection: React.FC<DynamicVideoSectionProps> = ({
           <h4 className="text-md font-medium text-blue-800 dark:text-blue-400 mb-3">Preview</h4>
           <div className="border border-blue-300 dark:border-blue-600 rounded-lg p-4 bg-white dark:bg-gray-800">
             {videoUrl ? (
-              <div className={`relative ${getAspectRatioClass(aspectRatio)} bg-gray-900 rounded-lg overflow-hidden`}>
-                {(videoType === 'youtube' || videoType === 'vimeo') ? (
-                  renderEmbeddedVideo() || (
-                    <div className="flex items-center justify-center h-full text-gray-400">
-                      <div className="text-center">
-                        <Play className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">Enter a valid {videoType === 'youtube' ? 'YouTube' : 'Vimeo'} URL</p>
-                      </div>
-                    </div>
-                  )
+              <div className="space-y-4">
+                {layout === 'full-video' ? (
+                  <div className={`relative ${getAspectRatioClass(aspectRatio)} bg-gray-900 rounded-lg overflow-hidden`}>
+                    {(videoType === 'youtube' || videoType === 'vimeo') ? (
+                      renderEmbeddedVideo() || (
+                        <div className="flex items-center justify-center h-full text-gray-400">
+                          <div className="text-center">
+                            <Play className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                            <p className="text-sm">Enter a valid {videoType === 'youtube' ? 'YouTube' : 'Vimeo'} URL</p>
+                          </div>
+                        </div>
+                      )
+                    ) : (
+                      renderCustomVideo() || (
+                        <div className="flex items-center justify-center h-full text-gray-400">
+                          <div className="text-center">
+                            <Play className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                            <p className="text-sm">Enter a valid video URL</p>
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
                 ) : (
-                  renderCustomVideo() || (
-                    <div className="flex items-center justify-center h-full text-gray-400">
-                      <div className="text-center">
-                        <Play className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">Enter a valid video URL</p>
-                      </div>
-                    </div>
-                  )
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {layout === 'half-text-left' ? (
+                      <>
+                        <div className="space-y-2">
+                          <div className="text-xs font-medium text-blue-600 dark:text-blue-400">Text Content</div>
+                          <div className="bg-gray-50 dark:bg-gray-700 rounded p-3 min-h-[100px]">
+                            {textContent ? (
+                              <div 
+                                className="prose prose-sm max-w-none text-gray-700 dark:text-gray-300"
+                                dangerouslySetInnerHTML={{ __html: textContent }}
+                              />
+                            ) : (
+                              <p className="text-gray-500 dark:text-gray-400 text-sm">Add text content...</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-xs font-medium text-blue-600 dark:text-blue-400">Video</div>
+                          <div className={`relative ${getAspectRatioClass(aspectRatio)} bg-gray-900 rounded-lg overflow-hidden`}>
+                            {(videoType === 'youtube' || videoType === 'vimeo') ? (
+                              renderEmbeddedVideo() || (
+                                <div className="flex items-center justify-center h-full text-gray-400">
+                                  <div className="text-center">
+                                    <Play className="w-6 h-6 mx-auto mb-1 opacity-50" />
+                                    <p className="text-xs">Video</p>
+                                  </div>
+                                </div>
+                              )
+                            ) : (
+                              renderCustomVideo() || (
+                                <div className="flex items-center justify-center h-full text-gray-400">
+                                  <div className="text-center">
+                                    <Play className="w-6 h-6 mx-auto mb-1 opacity-50" />
+                                    <p className="text-xs">Video</p>
+                                  </div>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="space-y-2">
+                          <div className="text-xs font-medium text-blue-600 dark:text-blue-400">Video</div>
+                          <div className={`relative ${getAspectRatioClass(aspectRatio)} bg-gray-900 rounded-lg overflow-hidden`}>
+                            {(videoType === 'youtube' || videoType === 'vimeo') ? (
+                              renderEmbeddedVideo() || (
+                                <div className="flex items-center justify-center h-full text-gray-400">
+                                  <div className="text-center">
+                                    <Play className="w-6 h-6 mx-auto mb-1 opacity-50" />
+                                    <p className="text-xs">Video</p>
+                                  </div>
+                                </div>
+                              )
+                            ) : (
+                              renderCustomVideo() || (
+                                <div className="flex items-center justify-center h-full text-gray-400">
+                                  <div className="text-center">
+                                    <Play className="w-6 h-6 mx-auto mb-1 opacity-50" />
+                                    <p className="text-xs">Video</p>
+                                  </div>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-xs font-medium text-blue-600 dark:text-blue-400">Text Content</div>
+                          <div className="bg-gray-50 dark:bg-gray-700 rounded p-3 min-h-[100px]">
+                            {textContent ? (
+                              <div 
+                                className="prose prose-sm max-w-none text-gray-700 dark:text-gray-300"
+                                dangerouslySetInnerHTML={{ __html: textContent }}
+                              />
+                            ) : (
+                              <p className="text-gray-500 dark:text-gray-400 text-sm">Add text content...</p>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 )}
               </div>
             ) : (
@@ -472,12 +595,12 @@ const DynamicVideoSection: React.FC<DynamicVideoSectionProps> = ({
         {((section.fields.title as string) || (section.fields.subtitle as string)) && (
           <div className="text-center mb-12">
             {(section.fields.title as string) && (
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 {section.fields.title as string}
               </h2>
             )}
             {(section.fields.subtitle as string) && (
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 {section.fields.subtitle as string}
               </p>
             )}
@@ -485,89 +608,175 @@ const DynamicVideoSection: React.FC<DynamicVideoSectionProps> = ({
         )}
 
         <div ref={containerRef} className="relative">
-          <div className={`relative ${getAspectRatioClass(aspectRatio)} bg-gray-900 rounded-xl overflow-hidden`}>
-            {(videoType === 'youtube' || videoType === 'vimeo') ? (
-              renderEmbeddedVideo()
-            ) : (
-              <>
-                {renderCustomVideo()}
-                
-                {/* Custom controls overlay */}
-                {!showControls && videoType !== 'youtube' && videoType !== 'vimeo' && (
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                    <button
-                      onClick={isPlaying ? handlePause : handlePlay}
-                      className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
-                    >
-                      {isPlaying ? (
-                        <Pause className="w-6 h-6 text-gray-900" />
-                      ) : (
-                        <Play className="w-6 h-6 text-gray-900 ml-1" />
-                      )}
-                    </button>
-                  </div>
-                )}
-
-                {/* Custom control bar */}
-                {!showControls && videoType !== 'youtube' && videoType !== 'vimeo' && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                    <div className="flex items-center space-x-4">
+          {layout === 'full-video' ? (
+            // Full Video Layout
+            <div className={`relative ${getAspectRatioClass(aspectRatio)} bg-gray-900 dark:bg-gray-800 rounded-xl overflow-hidden`}>
+              {(videoType === 'youtube' || videoType === 'vimeo') ? (
+                renderEmbeddedVideo()
+              ) : (
+                <>
+                  {renderCustomVideo()}
+                  
+                  {/* Custom controls overlay */}
+                  {!showControls && videoType !== 'youtube' && videoType !== 'vimeo' && (
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                       <button
                         onClick={isPlaying ? handlePause : handlePlay}
-                        className="text-white hover:text-gray-300 transition-colors"
+                        className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
                       >
                         {isPlaying ? (
-                          <Pause className="w-5 h-5" />
+                          <Pause className="w-6 h-6 text-gray-900" />
                         ) : (
-                          <Play className="w-5 h-5" />
+                          <Play className="w-6 h-6 text-gray-900 ml-1" />
                         )}
-                      </button>
-
-                      <div className="flex-1 flex items-center space-x-2">
-                        <span className="text-white text-sm">{formatTime(currentTime)}</span>
-                        <div className="flex-1 bg-white/30 rounded-full h-1">
-                          <div
-                            className="bg-white rounded-full h-1 transition-all"
-                            style={{ width: `${(currentTime / duration) * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-white text-sm">{formatTime(duration)}</span>
-                      </div>
-
-                      <button
-                        onClick={handleMute}
-                        className="text-white hover:text-gray-300 transition-colors"
-                      >
-                        {isMuted ? (
-                          <VolumeX className="w-5 h-5" />
-                        ) : (
-                          <Volume2 className="w-5 h-5" />
-                        )}
-                      </button>
-
-                      <button
-                        onClick={handleRestart}
-                        className="text-white hover:text-gray-300 transition-colors"
-                      >
-                        <RotateCcw className="w-5 h-5" />
-                      </button>
-
-                      <button
-                        onClick={handleFullscreen}
-                        className="text-white hover:text-gray-300 transition-colors"
-                      >
-                        <Maximize className="w-5 h-5" />
                       </button>
                     </div>
+                  )}
+
+                  {/* Custom control bar */}
+                  {!showControls && videoType !== 'youtube' && videoType !== 'vimeo' && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                      <div className="flex items-center space-x-4">
+                        <button
+                          onClick={isPlaying ? handlePause : handlePlay}
+                          className="text-white hover:text-gray-300 transition-colors"
+                        >
+                          {isPlaying ? (
+                            <Pause className="w-5 h-5" />
+                          ) : (
+                            <Play className="w-5 h-5" />
+                          )}
+                        </button>
+
+                        <div className="flex-1 flex items-center space-x-2">
+                          <span className="text-white text-sm">{formatTime(currentTime)}</span>
+                          <div className="flex-1 bg-white/30 rounded-full h-1">
+                            <div
+                              className="bg-white rounded-full h-1 transition-all"
+                              style={{ width: `${(currentTime / duration) * 100}%` }}
+                            />
+                          </div>
+                          <span className="text-white text-sm">{formatTime(duration)}</span>
+                        </div>
+
+                        <button
+                          onClick={handleMute}
+                          className="text-white hover:text-gray-300 transition-colors"
+                        >
+                          {isMuted ? (
+                            <VolumeX className="w-5 h-5" />
+                          ) : (
+                            <Volume2 className="w-5 h-5" />
+                          )}
+                        </button>
+
+                        <button
+                          onClick={handleRestart}
+                          className="text-white hover:text-gray-300 transition-colors"
+                        >
+                          <RotateCcw className="w-5 h-5" />
+                        </button>
+
+                        <button
+                          onClick={handleFullscreen}
+                          className="text-white hover:text-gray-300 transition-colors"
+                        >
+                          <Maximize className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          ) : (
+            // Half Text Layouts
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              {layout === 'half-text-left' ? (
+                <>
+                  {/* Text Content Left */}
+                  <div className="space-y-6">
+                    {textContent && (
+                      <div 
+                        className="prose prose-lg max-w-none text-gray-700 dark:text-gray-300"
+                        dangerouslySetInnerHTML={{ __html: textContent }}
+                      />
+                    )}
                   </div>
-                )}
-              </>
-            )}
-          </div>
+                  
+                  {/* Video Right */}
+                  <div className={`relative ${getAspectRatioClass(aspectRatio)} bg-gray-900 dark:bg-gray-800 rounded-xl overflow-hidden`}>
+                    {(videoType === 'youtube' || videoType === 'vimeo') ? (
+                      renderEmbeddedVideo()
+                    ) : (
+                      <>
+                        {renderCustomVideo()}
+                        
+                        {/* Custom controls overlay */}
+                        {!showControls && videoType !== 'youtube' && videoType !== 'vimeo' && (
+                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                            <button
+                              onClick={isPlaying ? handlePause : handlePlay}
+                              className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
+                            >
+                              {isPlaying ? (
+                                <Pause className="w-5 h-5 text-gray-900" />
+                              ) : (
+                                <Play className="w-5 h-5 text-gray-900 ml-1" />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Video Left */}
+                  <div className={`relative ${getAspectRatioClass(aspectRatio)} bg-gray-900 dark:bg-gray-800 rounded-xl overflow-hidden`}>
+                    {(videoType === 'youtube' || videoType === 'vimeo') ? (
+                      renderEmbeddedVideo()
+                    ) : (
+                      <>
+                        {renderCustomVideo()}
+                        
+                        {/* Custom controls overlay */}
+                        {!showControls && videoType !== 'youtube' && videoType !== 'vimeo' && (
+                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                            <button
+                              onClick={isPlaying ? handlePause : handlePlay}
+                              className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
+                            >
+                              {isPlaying ? (
+                                <Pause className="w-5 h-5 text-gray-900" />
+                              ) : (
+                                <Play className="w-5 h-5 text-gray-900 ml-1" />
+                              )}
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Text Content Right */}
+                  <div className="space-y-6">
+                    {textContent && (
+                      <div 
+                        className="prose prose-lg max-w-none text-gray-700 dark:text-gray-300"
+                        dangerouslySetInnerHTML={{ __html: textContent }}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           {caption && (
             <div className="mt-4 text-center">
-              <p className="text-gray-600 italic">{caption}</p>
+              <p className="text-gray-600 dark:text-gray-400 italic">{caption}</p>
             </div>
           )}
         </div>
