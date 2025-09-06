@@ -78,6 +78,112 @@ export class GoogleSheetsManager {
   }
 
   /**
+   * Fetch data from Google Sheets using CSV export (for public sheets)
+   */
+  static async fetchSheetDataFromCSV(sheetUrl: string, sheetName: string = 'Sheet1', range: string = 'A1:C10'): Promise<string[][]> {
+    try {
+      // Extract sheet ID from URL
+      const sheetId = this.extractSheetId(sheetUrl);
+      if (!sheetId) {
+        throw new Error('Invalid Google Sheets URL format');
+      }
+
+      console.log('Attempting to fetch CSV data for sheet ID:', sheetId);
+      
+      // Try multiple CSV export URL formats
+      const csvUrls = [
+        `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0`,
+        `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`,
+        `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&range=${range}`,
+        `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0&range=${range}`
+      ];
+
+      let lastError: Error | null = null;
+      
+      for (const csvUrl of csvUrls) {
+        try {
+          console.log('Trying CSV URL:', csvUrl);
+          
+          const response = await fetch(csvUrl, {
+            method: 'GET',
+            headers: {
+              'Accept': 'text/csv,text/plain,*/*',
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            },
+            mode: 'cors'
+          });
+
+          if (!response.ok) {
+            console.log(`URL failed with status: ${response.status} ${response.statusText}`);
+            lastError = new Error(`HTTP ${response.status}: ${response.statusText}`);
+            continue;
+          }
+
+          const csvText = await response.text();
+          console.log('CSV response length:', csvText.length);
+          console.log('CSV preview:', csvText.substring(0, 200) + '...');
+
+          if (!csvText || csvText.trim() === '') {
+            console.log('Empty CSV response');
+            lastError = new Error('Empty CSV response');
+            continue;
+          }
+
+          // Parse CSV data with better error handling
+          const rows = csvText.split('\n')
+            .map(row => {
+              // Handle CSV parsing more robustly
+              const cells: string[] = [];
+              let currentCell = '';
+              let inQuotes = false;
+              
+              for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                
+                if (char === '"') {
+                  inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                  cells.push(currentCell.trim());
+                  currentCell = '';
+                } else {
+                  currentCell += char;
+                }
+              }
+              
+              // Add the last cell
+              cells.push(currentCell.trim());
+              
+              return cells.map(cell => cell.replace(/^"|"$/g, ''));
+            })
+            .filter(row => row.some(cell => cell.trim() !== '')); // Remove empty rows
+
+          if (rows.length === 0) {
+            console.log('No data rows found after parsing');
+            lastError = new Error('No data found in CSV export');
+            continue;
+          }
+
+          console.log('Successfully parsed CSV data:', rows.length, 'rows');
+          console.log('Sample data:', rows.slice(0, 3));
+          return rows;
+          
+        } catch (urlError) {
+          console.log('URL attempt failed:', urlError);
+          lastError = urlError instanceof Error ? urlError : new Error(String(urlError));
+          continue;
+        }
+      }
+
+      // If all URLs failed, throw the last error
+      throw lastError || new Error('All CSV export attempts failed');
+      
+    } catch (err) {
+      console.error('Error fetching CSV data:', err);
+      throw new Error(`Failed to fetch data from CSV export: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
    * AI-powered data analysis to determine optimal chart type
    */
   static async analyzeDataForChartType(data: string[][]): Promise<AIAnalysisResult> {
