@@ -3,7 +3,7 @@
 'use client';
 
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -80,9 +80,39 @@ const GoogleSheetsChart: React.FC<GoogleSheetsChartProps> = ({
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysisResult | null>(null);
   const [insights, setInsights] = useState<string[]>([]);
   const [showSettings, setShowSettings] = useState(false);
+  const [usingSampleData, setUsingSampleData] = useState(false);
   const chartRef = useRef<ChartJS<'bar' | 'line' | 'pie'>>(null);
 
-  const fetchData = async () => {
+  // Fallback method for public sheets using CSV export
+  const fetchDataFromCSV = useCallback(async () => {
+    try {
+      console.log('Fetching data from CSV export...');
+      const rows = await GoogleSheetsManager.fetchSheetDataFromCSV(googleSheetUrl, sheetName, dataRange);
+      
+      if (rows.length < 2) {
+        throw new Error('Insufficient data in CSV');
+      }
+
+      // Check if we're using sample data (sample data has specific structure)
+      const isSampleData = rows.length === 13 && rows[0]?.includes('Month') && rows[0]?.includes('Sales');
+      setUsingSampleData(isSampleData);
+
+      // Parse data for chart
+      const parsedData = GoogleSheetsManager.parseDataForChart(rows, chartType);
+      
+      setChartData(parsedData);
+      setLastUpdated(new Date());
+      onDataLoad?.(parsedData);
+
+    } catch (err) {
+      console.error('CSV fetch error:', err);
+      const errorMsg = err instanceof Error ? err.message : 'Failed to load chart data from CSV';
+      setError(errorMsg);
+      onError?.(errorMsg);
+    }
+  }, [googleSheetUrl, sheetName, dataRange, chartType, onDataLoad, onError]);
+
+  const fetchData = useCallback(async () => {
     if (!googleSheetUrl) {
       const errorMsg = 'Google Sheets URL is required';
       setError(errorMsg);
@@ -157,32 +187,7 @@ const GoogleSheetsChart: React.FC<GoogleSheetsChartProps> = ({
     } finally {
       setLoading(false);
     }
-  };
-
-  // Fallback method for public sheets using CSV export
-  const fetchDataFromCSV = async () => {
-    try {
-      console.log('Fetching data from CSV export...');
-      const rows = await GoogleSheetsManager.fetchSheetDataFromCSV(googleSheetUrl, sheetName, dataRange);
-      
-      if (rows.length < 2) {
-        throw new Error('Insufficient data in CSV');
-      }
-
-      // Parse data for chart
-      const parsedData = GoogleSheetsManager.parseDataForChart(rows, chartType);
-      
-      setChartData(parsedData);
-      setLastUpdated(new Date());
-      onDataLoad?.(parsedData);
-
-    } catch (err) {
-      console.error('CSV fetch error:', err);
-      const errorMsg = err instanceof Error ? err.message : 'Failed to load chart data from CSV';
-      setError(errorMsg);
-      onError?.(errorMsg);
-    }
-  };
+  }, [googleSheetUrl, sheetName, dataRange, chartType, apiKey, enableAI, onDataLoad, onError, fetchDataFromCSV]);
 
   useEffect(() => {
     fetchData();
@@ -410,6 +415,19 @@ const GoogleSheetsChart: React.FC<GoogleSheetsChartProps> = ({
 
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg ${className}`}>
+      {/* Sample Data Notification */}
+      {usingSampleData && (
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-800 px-6 py-3">
+          <div className="flex items-center space-x-2">
+            <AlertCircle className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+              <strong>Demo Mode:</strong> Using sample data because the Google Sheets URL is not accessible. 
+              Replace with a valid public Google Sheets URL to see your actual data.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">

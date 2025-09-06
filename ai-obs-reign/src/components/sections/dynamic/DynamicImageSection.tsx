@@ -7,6 +7,7 @@ import React from 'react';
 import { ExternalLink } from 'lucide-react';
 import { DynamicSection } from '@/lib/dynamic-sections';
 import { SectionStylingUtils, useParallaxScroll } from '@/lib/section-styling';
+import MediaSelector from '@/components/media/MediaSelector';
 
 interface DynamicImageSectionProps {
   section: DynamicSection;
@@ -141,13 +142,30 @@ const DynamicImageSection: React.FC<DynamicImageSectionProps> = ({ section, isEd
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Image URL
+                  Select Image
                 </label>
+                <MediaSelector
+                  onSelect={(file) => {
+                    if (file) {
+                      handleFieldChange('image', file.url);
+                      handleFieldChange('alt', file.alt || file.name);
+                    } else {
+                      handleFieldChange('image', '');
+                      handleFieldChange('alt', '');
+                    }
+                  }}
+                  currentValue={typeof fields.image === 'string' ? fields.image : ''}
+                  acceptedTypes={['image']}
+                  className="mb-4"
+                />
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  Or enter image URL manually:
+                </div>
                 <input
                   type="text"
                   value={typeof fields.image === 'string' ? fields.image : ''}
                   onChange={(e) => handleFieldChange('image', e.target.value)}
-                  className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
+                  className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white mt-2"
                   placeholder="https://example.com/image.jpg"
                 />
               </div>

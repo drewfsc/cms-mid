@@ -52,6 +52,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({
   const [chartData, setChartData] = useState<ChartData<'bar' | 'line' | 'pie'> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [usingSampleData, setUsingSampleData] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +71,10 @@ const SimpleChart: React.FC<SimpleChartProps> = ({
         if (rows.length < 2) {
           throw new Error('Insufficient data');
         }
+
+        // Check if we're using sample data
+        const isSampleData = rows.length === 13 && rows[0]?.includes('Month') && rows[0]?.includes('Sales');
+        setUsingSampleData(isSampleData);
 
         const parsedData = GoogleSheetsManager.parseDataForChart(rows, chartType);
         setChartData(parsedData);
@@ -151,6 +156,15 @@ const SimpleChart: React.FC<SimpleChartProps> = ({
 
   return (
     <div className={className} style={{ height: `${height}px` }}>
+      {/* Sample Data Notification */}
+      {usingSampleData && (
+        <div className="absolute top-2 right-2 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700 rounded px-2 py-1 z-10">
+          <p className="text-xs text-yellow-800 dark:text-yellow-200">
+            Demo data
+          </p>
+        </div>
+      )}
+      
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {chartType === 'bar' && <Bar {...(chartProps as any)} />}
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
