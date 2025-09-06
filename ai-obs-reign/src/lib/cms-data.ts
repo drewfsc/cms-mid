@@ -716,6 +716,36 @@ export class CMSDataManager {
                 textColor: 'auto' as const,
                 padding: 'large' as const
               };
+            case 'divider':
+              return {
+                backgroundColor: 'white',
+                textColor: 'auto' as const,
+                padding: 'small' as const
+              };
+            case 'image':
+              return {
+                backgroundColor: 'white',
+                textColor: 'auto' as const,
+                padding: 'medium' as const
+              };
+            case 'code':
+              return {
+                backgroundColor: 'gray-900',
+                textColor: 'light' as const,
+                padding: 'medium' as const
+              };
+            case 'gallery':
+              return {
+                backgroundColor: 'gray-50',
+                textColor: 'auto' as const,
+                padding: 'large' as const
+              };
+            case 'form':
+              return {
+                backgroundColor: 'white',
+                textColor: 'auto' as const,
+                padding: 'large' as const
+              };
             default:
               return {
                 backgroundColor: 'white',

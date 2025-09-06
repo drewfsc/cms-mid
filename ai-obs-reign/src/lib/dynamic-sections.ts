@@ -1,6 +1,6 @@
 // Dynamic section types and interfaces
 
-export type SectionLayout = 'hero' | 'bento' | 'grid' | 'columns';
+export type SectionLayout = 'hero' | 'bento' | 'grid' | 'columns' | 'divider' | 'image' | 'code' | 'gallery' | 'form';
 
 export interface SectionField {
   name: string;
@@ -144,8 +144,147 @@ export const SECTION_TEMPLATES: SectionTemplate[] = [
         name: 'features',
         label: 'Feature List',
         type: 'list',
-        defaultValue: []
+        defaultValue: [        ]
       }
+    ]
+  },
+  {
+    layout: 'divider',
+    name: 'Divider Section',
+    description: 'Text divider with customizable alignment and optional line',
+    icon: 'Minus',
+    defaultFields: [
+      { name: 'text', label: 'Divider Text', type: 'text' },
+      { 
+        name: 'alignment', 
+        label: 'Text Alignment', 
+        type: 'select', 
+        options: ['left', 'center', 'right'], 
+        defaultValue: 'center' 
+      },
+      { name: 'showLine', label: 'Show Divider Line', type: 'boolean', defaultValue: true },
+      { 
+        name: 'lineStyle', 
+        label: 'Line Style', 
+        type: 'select', 
+        options: ['solid', 'dashed', 'dotted'], 
+        defaultValue: 'solid' 
+      }
+    ]
+  },
+  {
+    layout: 'image',
+    name: 'Image Section',
+    description: 'Full-width or contained image with adjustable dimensions',
+    icon: 'Image',
+    defaultFields: [
+      { name: 'image', label: 'Image URL', type: 'image', required: true },
+      { name: 'alt', label: 'Alt Text', type: 'text', required: true },
+      { name: 'caption', label: 'Caption', type: 'text' },
+      { 
+        name: 'size', 
+        label: 'Image Size', 
+        type: 'select', 
+        options: ['small', 'medium', 'large', 'full'], 
+        defaultValue: 'large' 
+      },
+      { 
+        name: 'alignment', 
+        label: 'Alignment', 
+        type: 'select', 
+        options: ['left', 'center', 'right'], 
+        defaultValue: 'center' 
+      },
+      { name: 'link', label: 'Link URL (optional)', type: 'link' }
+    ]
+  },
+  {
+    layout: 'code',
+    name: 'Code Block',
+    description: 'Syntax-highlighted code block with language selection',
+    icon: 'Code',
+    defaultFields: [
+      { name: 'title', label: 'Code Block Title', type: 'text' },
+      { name: 'code', label: 'Code Content', type: 'textarea', required: true },
+      { 
+        name: 'language', 
+        label: 'Programming Language', 
+        type: 'select', 
+        options: ['javascript', 'typescript', 'python', 'bash', 'json', 'yaml', 'sql', 'html', 'css'], 
+        defaultValue: 'javascript' 
+      },
+      { name: 'showLineNumbers', label: 'Show Line Numbers', type: 'boolean', defaultValue: true },
+      { name: 'allowCopy', label: 'Allow Copy to Clipboard', type: 'boolean', defaultValue: true }
+    ]
+  },
+  {
+    layout: 'gallery',
+    name: 'Image Gallery',
+    description: 'Grid layout for multiple images with lightbox support',
+    icon: 'Images',
+    defaultFields: [
+      { name: 'title', label: 'Gallery Title', type: 'text' },
+      { name: 'description', label: 'Gallery Description', type: 'textarea' },
+      { 
+        name: 'columns', 
+        label: 'Columns per Row', 
+        type: 'select', 
+        options: ['2', '3', '4', '5'], 
+        defaultValue: '3' 
+      },
+      {
+        name: 'images',
+        label: 'Gallery Images',
+        type: 'list',
+        defaultValue: [
+          {
+            url: '',
+            alt: '',
+            caption: ''
+          }
+        ]
+      },
+      { name: 'enableLightbox', label: 'Enable Lightbox', type: 'boolean', defaultValue: true }
+    ]
+  },
+  {
+    layout: 'form',
+    name: 'Contact Form',
+    description: 'Customizable contact form with field configuration',
+    icon: 'FileText',
+    defaultFields: [
+      { name: 'title', label: 'Form Title', type: 'text', required: true },
+      { name: 'description', label: 'Form Description', type: 'textarea' },
+      {
+        name: 'fields',
+        label: 'Form Fields',
+        type: 'list',
+        defaultValue: [
+          {
+            name: 'name',
+            label: 'Full Name',
+            type: 'text',
+            required: true,
+            placeholder: 'Enter your name'
+          },
+          {
+            name: 'email',
+            label: 'Email Address',
+            type: 'email',
+            required: true,
+            placeholder: 'Enter your email'
+          },
+          {
+            name: 'message',
+            label: 'Message',
+            type: 'textarea',
+            required: true,
+            placeholder: 'Enter your message'
+          }
+        ]
+      },
+      { name: 'submitText', label: 'Submit Button Text', type: 'text', defaultValue: 'Send Message' },
+      { name: 'successMessage', label: 'Success Message', type: 'text', defaultValue: 'Thank you! Your message has been sent.' }
     ]
   }
 ];
@@ -186,6 +325,36 @@ export function createSection(template: SectionTemplate, name: string): DynamicS
           padding: 'large'
         };
       case 'columns':
+        return {
+          backgroundColor: 'white',
+          textColor: 'auto',
+          padding: 'large'
+        };
+      case 'divider':
+        return {
+          backgroundColor: 'white',
+          textColor: 'auto',
+          padding: 'small'
+        };
+      case 'image':
+        return {
+          backgroundColor: 'white',
+          textColor: 'auto',
+          padding: 'medium'
+        };
+      case 'code':
+        return {
+          backgroundColor: 'gray-900',
+          textColor: 'light',
+          padding: 'medium'
+        };
+      case 'gallery':
+        return {
+          backgroundColor: 'gray-50',
+          textColor: 'auto',
+          padding: 'large'
+        };
+      case 'form':
         return {
           backgroundColor: 'white',
           textColor: 'auto',
