@@ -28,7 +28,9 @@ const DynamicGridSection: React.FC<DynamicGridSectionProps> = ({ section, isEdit
   const fallbackStyling = {
     backgroundColor: 'gray-50',
     textColor: 'auto' as const,
-    padding: 'large' as const
+    padding: 'large' as const,
+    cardBorderRadius: 12,
+    cardOpacity: 100
   };
   
   const sectionStyling = styling || fallbackStyling;
@@ -72,6 +74,11 @@ const DynamicGridSection: React.FC<DynamicGridSectionProps> = ({ section, isEdit
     }
   };
 
+  const getBackgroundColorWithOpacity = (opacity: number) => {
+    const opacityValue = opacity / 100;
+    return `linear-gradient(to bottom right, rgba(249, 250, 251, ${opacityValue}), rgba(243, 244, 246, ${opacityValue}))`;
+  };
+
   return (
     <section 
       id={section.id}
@@ -98,13 +105,13 @@ const DynamicGridSection: React.FC<DynamicGridSectionProps> = ({ section, isEdit
             {isEditMode ? (
               <input
                 type="text"
-                value={fields.title || ''}
+                value={(fields.title as string) || ''}
                 onChange={(e) => handleFieldChange('title', e.target.value)}
                 className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-blue-400"
                 placeholder="Section title"
               />
             ) : (
-              fields.title || 'Grid Section'
+              (fields.title as string) || 'Grid Section'
             )}
           </h2>
 
@@ -113,13 +120,13 @@ const DynamicGridSection: React.FC<DynamicGridSectionProps> = ({ section, isEdit
               {isEditMode ? (
                 <input
                   type="text"
-                  value={fields.subtitle || ''}
+                  value={(fields.subtitle as string) || ''}
                   onChange={(e) => handleFieldChange('subtitle', e.target.value)}
                   className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-600 dark:text-gray-400 outline-none focus:border-blue-400"
                   placeholder="Section subtitle (optional)"
                 />
               ) : (
-                fields.subtitle
+                fields.subtitle as string
               )}
             </p>
           )}
@@ -128,13 +135,13 @@ const DynamicGridSection: React.FC<DynamicGridSectionProps> = ({ section, isEdit
             <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               {isEditMode ? (
                 <textarea
-                  value={fields.description || ''}
+                  value={(fields.description as string) || ''}
                   onChange={(e) => handleFieldChange('description', e.target.value)}
                   className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-600 dark:text-gray-300 outline-none focus:border-blue-400 min-h-[80px]"
                   placeholder="Section description (optional)"
                 />
               ) : (
-                fields.description
+                fields.description as string
               )}
             </p>
           )}
@@ -143,7 +150,7 @@ const DynamicGridSection: React.FC<DynamicGridSectionProps> = ({ section, isEdit
             <div className="mt-4">
               <label className="text-sm text-gray-600 dark:text-gray-400 mr-2">Columns:</label>
               <select
-                value={columns}
+                value={columns as string}
                 onChange={(e) => handleFieldChange('columns', e.target.value)}
                 className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-1 text-sm"
               >
@@ -160,7 +167,11 @@ const DynamicGridSection: React.FC<DynamicGridSectionProps> = ({ section, isEdit
           {items.map((item, index) => (
             <div
               key={index}
-              className="relative group bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-neumorphic hover:shadow-neumorphic-hover transition-all duration-300 border-0"
+              className="relative group rounded-xl p-6 shadow-neumorphic hover:shadow-neumorphic-hover transition-all duration-300 border-0"
+              style={{
+                borderRadius: `${sectionStyling.cardBorderRadius || 12}px`,
+                background: getBackgroundColorWithOpacity(sectionStyling.cardOpacity || 100)
+              }}
             >
               {isEditMode && (
                 <button
