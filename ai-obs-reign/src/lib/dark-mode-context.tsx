@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
+
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 

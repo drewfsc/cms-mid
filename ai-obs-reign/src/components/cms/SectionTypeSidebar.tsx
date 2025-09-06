@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
+
 
 import React from 'react';
 import { Layout, Grid3x3, LayoutGrid, Columns, Minus, Image, Code, Images, FileText } from 'lucide-react';

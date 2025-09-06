@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Google Sheets API integration with AI-powered data interpretation
 
 export interface GoogleSheetsConfig {

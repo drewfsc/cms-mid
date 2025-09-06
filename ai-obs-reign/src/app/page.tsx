@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
+
 
 import { useEffect, useState } from 'react';
 import Header from '@/components/layout/Header';

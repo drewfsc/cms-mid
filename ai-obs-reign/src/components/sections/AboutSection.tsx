@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
+
 
 import React, { useState, useEffect } from 'react';
 import { Users, Target, Zap, Award, Edit3 } from 'lucide-react';

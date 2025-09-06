@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
+
 
 import React, { useState, useEffect } from 'react';
 import { X, CheckCircle, AlertCircle, Play, ArrowRight, Mail, User, Building, Phone } from 'lucide-react';

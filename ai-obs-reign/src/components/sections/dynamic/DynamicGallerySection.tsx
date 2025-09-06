@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
+
 
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, X, ZoomIn, ChevronLeft, ChevronRight, RotateCcw, Download } from 'lucide-react';

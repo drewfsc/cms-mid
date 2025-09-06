@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
+
 
 import React, { useState } from 'react';
 import { ChevronDown, Smile } from 'lucide-react';

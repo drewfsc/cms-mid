@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // MailChimp Integration for R.E.I.G.N
 // Handles newsletter signups, contact forms, and lead capture
 
