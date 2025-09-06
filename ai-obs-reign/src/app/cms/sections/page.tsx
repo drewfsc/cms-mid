@@ -22,7 +22,11 @@ import {
   Image,
   Code,
   Images,
-  FileText
+  FileText,
+  Filter,
+  X,
+  CheckSquare,
+  Square
 } from 'lucide-react';
 
 // Import section components
@@ -44,6 +48,13 @@ export default function CMSSections() {
   const [draggedSection, setDraggedSection] = useState<string | null>(null);
   const [dragOverSection, setDragOverSection] = useState<string | null>(null);
   const [draggedTemplate, setDraggedTemplate] = useState<{template: SectionTemplate, name: string} | null>(null);
+  const [filters, setFilters] = useState({
+    visibility: 'all', // 'all', 'visible', 'hidden'
+    type: 'all', // 'all', 'hero', 'bento', 'grid', etc.
+    navigation: 'all' // 'all', 'in-nav', 'not-in-nav'
+  });
+  const [selectedSections, setSelectedSections] = useState<Set<string>>(new Set());
+  const [showBulkActions, setShowBulkActions] = useState(false);
 
   useEffect(() => {
     loadSections();
@@ -128,6 +139,93 @@ export default function CMSSections() {
     setHasChanges(true);
   };
 
+  const handleUpdateSectionName = (sectionId: string, name: string) => {
+    CMSDataManager.updateDynamicSection(sectionId, { name });
+    loadSections();
+    setHasChanges(true);
+  };
+
+  const handleFilterChange = (filterType: 'visibility' | 'type' | 'navigation', value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+    // Clear selection when filters change
+    setSelectedSections(new Set());
+    setShowBulkActions(false);
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      visibility: 'all',
+      type: 'all',
+      navigation: 'all'
+    });
+  };
+
+  const getFilteredSections = () => {
+    return sections.filter(section => {
+      // Filter by visibility
+      if (filters.visibility === 'visible' && !section.isVisible) return false;
+      if (filters.visibility === 'hidden' && section.isVisible) return false;
+      
+      // Filter by type
+      if (filters.type !== 'all' && section.layout !== filters.type) return false;
+      
+      // Filter by navigation
+      if (filters.navigation === 'in-nav' && !section.includeInNavigation) return false;
+      if (filters.navigation === 'not-in-nav' && section.includeInNavigation) return false;
+      
+      return true;
+    });
+  };
+
+  const handleSectionSelect = (sectionId: string) => {
+    const newSelected = new Set(selectedSections);
+    if (newSelected.has(sectionId)) {
+      newSelected.delete(sectionId);
+    } else {
+      newSelected.add(sectionId);
+    }
+    setSelectedSections(newSelected);
+    setShowBulkActions(newSelected.size > 0);
+  };
+
+  const handleSelectAll = () => {
+    const filteredSections = getFilteredSections();
+    if (selectedSections.size === filteredSections.length) {
+      // Deselect all
+      setSelectedSections(new Set());
+      setShowBulkActions(false);
+    } else {
+      // Select all filtered sections
+      const allIds = new Set(filteredSections.map(s => s.id));
+      setSelectedSections(allIds);
+      setShowBulkActions(true);
+    }
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedSections.size === 0) return;
+    
+    const confirmMessage = selectedSections.size === 1 
+      ? 'Are you sure you want to delete this section?'
+      : `Are you sure you want to delete ${selectedSections.size} sections?`;
+    
+    if (confirm(confirmMessage)) {
+      // Delete selected sections
+      selectedSections.forEach(sectionId => {
+        CMSDataManager.deleteDynamicSection(sectionId);
+      });
+      
+      // Clear selection and reload
+      setSelectedSections(new Set());
+      setShowBulkActions(false);
+      loadSections();
+      setHasChanges(true);
+    }
+  };
+
 
   const handleDuplicateSection = (sectionId: string) => {
     const section = sections.find(s => s.id === sectionId);
@@ -205,7 +303,7 @@ export default function CMSSections() {
     if (draggedTemplate) {
       const newSection = createSection(draggedTemplate.template, draggedTemplate.name);
       
-      // Find the target section index
+      // Find the target section index in the full sections array
       const targetIndex = sections.findIndex(s => s.id === targetSectionId);
       
       if (targetIndex !== -1) {
@@ -244,7 +342,7 @@ export default function CMSSections() {
       return;
     }
 
-    // Find the indices of the dragged and target sections
+    // Find the indices of the dragged and target sections in the full sections array
     const draggedIndex = sections.findIndex(s => s.id === draggedSection);
     const targetIndex = sections.findIndex(s => s.id === targetSectionId);
 
@@ -428,14 +526,162 @@ export default function CMSSections() {
           {/* Right Side - Active Sections */}
           <div className="space-y-6 col-span-2">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Active Sections</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Active Sections</h2>
+                <div className="flex items-center space-x-2">
+                  <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {getFilteredSections().length} of {sections.length} sections
+                  </span>
+                </div>
+              </div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                 Drag to reorder sections or click edit to modify
               </p>
             </div>
 
+            {/* Filter Controls */}
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic p-4 border-0">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-white">Filter Sections</h3>
+                {(filters.visibility !== 'all' || filters.type !== 'all' || filters.navigation !== 'all') && (
+                  <button
+                    onClick={clearFilters}
+                    className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center space-x-1"
+                  >
+                    <X className="w-3 h-3" />
+                    <span>Clear filters</span>
+                  </button>
+                )}
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Visibility Filter */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Visibility
+                  </label>
+                  <select
+                    value={filters.visibility}
+                    onChange={(e) => handleFilterChange('visibility', e.target.value)}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    <option value="all">All Sections</option>
+                    <option value="visible">Visible Only</option>
+                    <option value="hidden">Hidden Only</option>
+                  </select>
+                </div>
+
+                {/* Type Filter */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Section Type
+                  </label>
+                  <select
+                    value={filters.type}
+                    onChange={(e) => handleFilterChange('type', e.target.value)}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="hero">Hero</option>
+                    <option value="bento">Bento Grid</option>
+                    <option value="grid">Content Grid</option>
+                    <option value="columns">Columns</option>
+                    <option value="divider">Divider</option>
+                    <option value="image">Image</option>
+                    <option value="code">Code Block</option>
+                    <option value="gallery">Gallery</option>
+                    <option value="form">Contact Form</option>
+                  </select>
+                </div>
+
+                {/* Navigation Filter */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Navigation
+                  </label>
+                  <select
+                    value={filters.navigation}
+                    onChange={(e) => handleFilterChange('navigation', e.target.value)}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  >
+                    <option value="all">All Sections</option>
+                    <option value="in-nav">In Navigation</option>
+                    <option value="not-in-nav">Not in Navigation</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Bulk Actions */}
+            {showBulkActions && (
+              <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-lg shadow-neumorphic p-4 border-0 border-l-4 border-red-400">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+                      <span className="text-sm font-medium text-red-800 dark:text-red-300">
+                        {selectedSections.size} section{selectedSections.size !== 1 ? 's' : ''} selected
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSelectedSections(new Set());
+                        setShowBulkActions(false);
+                      }}
+                      className="text-xs text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200"
+                    >
+                      Clear selection
+                    </button>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={handleBulkDelete}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium flex items-center space-x-2"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      <span>Delete Selected</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Section List */}
         <div className="space-y-4">
+          {/* Section List Header with Select All */}
+          {getFilteredSections().length > 0 && (
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic border-0 overflow-hidden">
+              <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between text-sm font-medium text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={handleSelectAll}
+                      className="flex items-center space-x-2 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+                    >
+                      {selectedSections.size === getFilteredSections().length && getFilteredSections().length > 0 ? (
+                        <CheckSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      ) : (
+                        <Square className="w-4 h-4 text-gray-400" />
+                      )}
+                      <span>
+                        {selectedSections.size === getFilteredSections().length && getFilteredSections().length > 0
+                          ? 'Deselect All'
+                          : 'Select All'
+                        }
+                      </span>
+                    </button>
+                    <span className="w-8">Order</span>
+                    <span className="flex-1">Section Name</span>
+                    <span className="w-20">Type</span>
+                    <span className="w-16">Status</span>
+                    <span className="w-20">Navigation</span>
+                  </div>
+                  <span className="w-24 text-right">Actions</span>
+                </div>
+              </div>
+            </div>
+          )}
           {/* Top Drop Zone */}
           {draggedTemplate && (
             <div 
@@ -482,7 +728,7 @@ export default function CMSSections() {
             </div>
           )}
           
-          {sections.map((section, index) => {
+          {getFilteredSections().map((section, index) => {
             const isDragging = draggedSection === section.id;
             const isDragOver = dragOverSection === section.id;
             const isEditing = editingSection === section.id;
@@ -512,8 +758,11 @@ export default function CMSSections() {
                       
                       if (draggedTemplate) {
                         const newSection = createSection(draggedTemplate.template, draggedTemplate.name);
+                        
+                        // Find the actual index in the full sections array
+                        const actualIndex = sections.findIndex(s => s.id === section.id);
                         const updatedSections = [...sections];
-                        updatedSections.splice(index, 0, newSection);
+                        updatedSections.splice(actualIndex, 0, newSection);
                         
                         // Update order values
                         updatedSections.forEach((section, idx) => {
@@ -563,12 +812,27 @@ export default function CMSSections() {
                       : isDragOver 
                       ? 'shadow-neumorphic-hover transform -translate-y-1 border-l-4 border-blue-400' 
                       : 'hover:shadow-neumorphic-hover cursor-grab'
-                  }`}
+                  } ${selectedSections.has(section.id) ? 'ring-2 ring-blue-400 dark:ring-blue-500' : ''}`}
                 >
                   <div className="px-4 py-3">
                     <div className="flex items-center justify-between">
-                      {/* Left side - Drag handle and section info */}
+                      {/* Left side - Checkbox, Drag handle and section info */}
                       <div className="flex items-center space-x-4 flex-1">
+                        {/* Checkbox */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSectionSelect(section.id);
+                          }}
+                          className="flex items-center justify-center w-4 h-4 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                        >
+                          {selectedSections.has(section.id) ? (
+                            <CheckSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                          ) : (
+                            <Square className="w-4 h-4 text-gray-400" />
+                          )}
+                        </button>
+                        
                         <button
                           className={`p-1 rounded transition-colors ${
                             isDragging ? 'bg-blue-100 dark:bg-blue-800' : 'hover:bg-gray-100 dark:hover:bg-gray-700'
@@ -672,11 +936,22 @@ export default function CMSSections() {
                     {/* Edit Header */}
                     <div className="px-4 py-3 border-b border-blue-200 dark:border-blue-800">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                          <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                            Editing: {section.name}
-                          </span>
+                        <div className="flex items-center space-x-4 flex-1">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                              Editing:
+                            </span>
+                          </div>
+                          <div className="flex-1 max-w-xs">
+                            <input
+                              type="text"
+                              value={section.name}
+                              onChange={(e) => handleUpdateSectionName(section.id, e.target.value)}
+                              className="w-full px-2 py-1 text-sm font-medium text-blue-700 dark:text-blue-300 bg-transparent border border-blue-300 dark:border-blue-600 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              placeholder="Section name"
+                            />
+                          </div>
                         </div>
                         <div className="flex items-center space-x-2">
                           <button
@@ -815,6 +1090,24 @@ export default function CMSSections() {
         </div>
 
             {/* Empty State */}
+            {getFilteredSections().length === 0 && sections.length > 0 && (
+              <div className="text-center py-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic border-0">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                  No sections match your filters
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">
+                  Try adjusting your filter settings or clear all filters
+                </p>
+                <button
+                  onClick={clearFilters}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            )}
+
+            {/* No Sections State */}
             {sections.length === 0 && (
               <div className="text-center py-12 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic border-0">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
