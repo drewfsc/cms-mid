@@ -158,17 +158,18 @@ const DynamicDividerSection: React.FC<DynamicDividerSectionProps> = ({ section, 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`flex items-center ${getAlignmentClass()}`}>
           {/* Left Line */}
-          {fields.showLine && fields.alignment !== 'left' && (
-            <div className={`flex-1 border-t border-gray-300 dark:border-gray-600 ${getLineStyleClass()}`}></div>
-          )}
-          
+          {(fields.showLine === true || fields.showLine === undefined) && fields.alignment !== 'left'
+            ? (
+              <div className={`flex-1 border-t border-gray-300 dark:border-gray-600 ${getLineStyleClass()}`}></div>
+            )
+            : null}
           {/* Text Content */}
-          {(fields.text || isEditMode) && (
+          {(typeof fields.text === 'string' || isEditMode) && (
             <div className="px-6">
               {isEditMode ? (
                 <input
                   type="text"
-                  value={fields.text || ''}
+                  value={typeof fields.text === 'string' ? fields.text : ''}
                   onChange={(e) => handleFieldChange('text', e.target.value)}
                   className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-blue-400"
                   placeholder="Divider text (optional)"
@@ -178,14 +179,14 @@ const DynamicDividerSection: React.FC<DynamicDividerSectionProps> = ({ section, 
                   className={`${getTextSizeClass()} ${getTextWeightClass()} whitespace-nowrap`}
                   style={getTextColorStyle()}
                 >
-                  {fields.text}
+                  {typeof fields.text === 'string' ? fields.text : ''}
                 </span>
               )}
             </div>
           )}
           
           {/* Right Line */}
-          {fields.showLine && fields.alignment !== 'right' && (
+          {(fields.showLine === true || fields.showLine === undefined) && fields.alignment !== 'right' && (
             <div className={`flex-1 border-t border-gray-300 dark:border-gray-600 ${getLineStyleClass()}`}></div>
           )}
         </div>
@@ -200,7 +201,7 @@ const DynamicDividerSection: React.FC<DynamicDividerSectionProps> = ({ section, 
                   Text Alignment
                 </label>
                 <select
-                  value={fields.alignment || 'center'}
+                  value={typeof fields.alignment === 'string' ? fields.alignment : 'center'}
                   onChange={(e) => handleFieldChange('alignment', e.target.value)}
                   className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                 >
@@ -215,10 +216,10 @@ const DynamicDividerSection: React.FC<DynamicDividerSectionProps> = ({ section, 
                   Line Style
                 </label>
                 <select
-                  value={fields.lineStyle || 'solid'}
+                  value={typeof fields.lineStyle === 'string' ? fields.lineStyle : 'solid'}
                   onChange={(e) => handleFieldChange('lineStyle', e.target.value)}
                   className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
-                  disabled={!fields.showLine}
+                  disabled={fields.showLine === false}
                 >
                   <option value="solid">Solid</option>
                   <option value="dashed">Dashed</option>
@@ -230,7 +231,7 @@ const DynamicDividerSection: React.FC<DynamicDividerSectionProps> = ({ section, 
                 <label className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={fields.showLine !== false}
+                    checked={fields.showLine === true || fields.showLine === undefined}
                     onChange={(e) => handleFieldChange('showLine', e.target.checked)}
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
@@ -250,7 +251,7 @@ const DynamicDividerSection: React.FC<DynamicDividerSectionProps> = ({ section, 
                     Text Size
                   </label>
                   <select
-                    value={fields.textSize || 'base'}
+                    value={typeof fields.textSize === 'string' ? fields.textSize : 'base'}
                     onChange={(e) => handleFieldChange('textSize', e.target.value)}
                     className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                   >
@@ -268,7 +269,7 @@ const DynamicDividerSection: React.FC<DynamicDividerSectionProps> = ({ section, 
                     Font Weight
                   </label>
                   <select
-                    value={fields.textWeight || 'medium'}
+                    value={typeof fields.textWeight === 'string' ? fields.textWeight : 'medium'}
                     onChange={(e) => handleFieldChange('textWeight', e.target.value)}
                     className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                   >
@@ -286,7 +287,7 @@ const DynamicDividerSection: React.FC<DynamicDividerSectionProps> = ({ section, 
                     Text Color
                   </label>
                   <select
-                    value={fields.textColor || 'gray'}
+                    value={typeof fields.textColor === 'string' ? fields.textColor : 'gray'}
                     onChange={(e) => handleFieldChange('textColor', e.target.value)}
                     className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                   >

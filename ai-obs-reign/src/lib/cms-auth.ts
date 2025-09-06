@@ -97,9 +97,6 @@ export class CMSAuthManager {
       sessionStorage.clear();
       
       // Clear any CMS data caches
-      const cmsKeys = Object.keys(localStorage).filter(key => 
-        key.startsWith('reign-cms-') || key.startsWith('cms-')
-      );
       
       // Optionally clear CMS data on logout (uncomment if desired)
       // cmsKeys.forEach(key => localStorage.removeItem(key));

@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 'use client';
-
 
 import React, { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
@@ -158,7 +155,7 @@ const DynamicCodeSection: React.FC<DynamicCodeSectionProps> = ({ section, isEdit
                   Programming Language
                 </label>
                 <select
-                  value={fields.language || 'javascript'}
+                  value={typeof fields.language === 'string' ? fields.language : 'javascript'}
                   onChange={(e) => handleFieldChange('language', e.target.value)}
                   className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                 >

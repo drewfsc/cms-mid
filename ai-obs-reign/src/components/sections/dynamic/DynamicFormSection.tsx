@@ -87,7 +87,7 @@ const DynamicFormSection: React.FC<DynamicFormSectionProps> = ({ section, isEdit
     // Simulate API call
     setTimeout(() => {
       setSubmitStatus('success');
-      setSubmitMessage(fields.successMessage || 'Thank you! Your message has been sent.');
+      setSubmitMessage(typeof fields.successMessage === 'string' ? fields.successMessage : 'Thank you! Your message has been sent.');
       setFormData({});
     }, 1000);
   };
@@ -202,13 +202,13 @@ const DynamicFormSection: React.FC<DynamicFormSectionProps> = ({ section, isEdit
               {isEditMode ? (
                 <input
                   type="text"
-                  value={fields.title || ''}
+                  value={typeof fields.title === 'string' ? fields.title : ''}
                   onChange={(e) => handleFieldChange('title', e.target.value)}
                   className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-blue-400"
                   placeholder="Form title"
                 />
               ) : (
-                fields.title || 'Contact Form'
+                typeof fields.title === 'string' ? fields.title : 'Contact Form'
               )}
             </h2>
 
@@ -216,14 +216,14 @@ const DynamicFormSection: React.FC<DynamicFormSectionProps> = ({ section, isEdit
               <p className="text-gray-600 dark:text-gray-400">
                 {isEditMode ? (
                   <textarea
-                    value={fields.description || ''}
+                    value={typeof fields.description === 'string' ? fields.description : ''}
                     onChange={(e) => handleFieldChange('description', e.target.value)}
                     className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-600 dark:text-gray-400 outline-none focus:border-blue-400"
                     placeholder="Form description"
                     rows={3}
                   />
                 ) : (
-                  fields.description
+                  typeof fields.description === 'string' ? fields.description : ''
                 )}
               </p>
             )}
@@ -271,7 +271,7 @@ const DynamicFormSection: React.FC<DynamicFormSectionProps> = ({ section, isEdit
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2"
               >
                 <Send className="w-5 h-5" />
-                <span>{fields.submitText || 'Send Message'}</span>
+                <span>{typeof fields.submitText === 'string' ? fields.submitText : 'Send Message'}</span>
               </button>
             )}
 
@@ -282,14 +282,14 @@ const DynamicFormSection: React.FC<DynamicFormSectionProps> = ({ section, isEdit
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <input
                     type="text"
-                    value={fields.submitText || ''}
+                    value={typeof fields.submitText === 'string' ? fields.submitText : ''}
                     onChange={(e) => handleFieldChange('submitText', e.target.value)}
                     className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm"
                     placeholder="Submit button text"
                   />
                   <input
                     type="text"
-                    value={fields.successMessage || ''}
+                    value={typeof fields.successMessage === 'string' ? fields.successMessage : ''}
                     onChange={(e) => handleFieldChange('successMessage', e.target.value)}
                     className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm"
                     placeholder="Success message"

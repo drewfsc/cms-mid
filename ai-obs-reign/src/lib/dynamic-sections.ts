@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Dynamic section types and interfaces
 
 export type SectionLayout = 'hero' | 'bento' | 'grid' | 'columns' | 'divider' | 'image' | 'code' | 'gallery' | 'form' | 'social-feed' | 'charts' | 'video';

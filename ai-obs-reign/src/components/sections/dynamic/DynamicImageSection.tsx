@@ -63,10 +63,10 @@ const DynamicImageSection: React.FC<DynamicImageSectionProps> = ({ section, isEd
   const renderImage = () => {
     const imageElement = (
       <div className={`${getSizeClasses()} ${getAlignmentClass()}`}>
-        {fields.image ? (
+        {typeof fields.image === 'string' && fields.image ? (
           <img
-            src={fields.image}
-            alt={fields.alt || 'Image'}
+            src={typeof fields.image === 'string' ? fields.image : ''}
+            alt={typeof fields.alt === 'string' ? fields.alt : 'Image'}
             className="w-full h-auto rounded-lg shadow-neumorphic"
           />
         ) : isEditMode ? (
@@ -75,27 +75,27 @@ const DynamicImageSection: React.FC<DynamicImageSectionProps> = ({ section, isEd
           </div>
         ) : null}
         
-        {fields.caption && (
+        {(typeof fields.caption === 'string' && fields.caption) && (
           <p className="text-center text-gray-600 dark:text-gray-400 text-sm mt-3 italic">
             {isEditMode ? (
               <input
                 type="text"
-                value={fields.caption}
+                value={typeof fields.caption === 'string' ? fields.caption : ''}
                 onChange={(e) => handleFieldChange('caption', e.target.value)}
                 className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-center"
                 placeholder="Image caption"
               />
             ) : (
-              fields.caption
+              typeof fields.caption === 'string' ? fields.caption : ''
             )}
           </p>
         )}
       </div>
     );
 
-    if (fields.link && !isEditMode) {
+    if (typeof fields.link === 'string' && fields.link && !isEditMode) {
       return (
-        <a href={fields.link} className="group block">
+        <a href={typeof fields.link === 'string' ? fields.link : '#'} className="group block">
           {imageElement}
           <div className="text-center mt-2">
             <span className="text-blue-600 dark:text-blue-400 text-sm group-hover:text-blue-700 dark:group-hover:text-blue-300 inline-flex items-center">
@@ -145,7 +145,7 @@ const DynamicImageSection: React.FC<DynamicImageSectionProps> = ({ section, isEd
                 </label>
                 <input
                   type="text"
-                  value={fields.image || ''}
+                  value={typeof fields.image === 'string' ? fields.image : ''}
                   onChange={(e) => handleFieldChange('image', e.target.value)}
                   className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                   placeholder="https://example.com/image.jpg"
@@ -158,7 +158,7 @@ const DynamicImageSection: React.FC<DynamicImageSectionProps> = ({ section, isEd
                 </label>
                 <input
                   type="text"
-                  value={fields.alt || ''}
+                  value={typeof fields.alt === 'string' ? fields.alt : ''}
                   onChange={(e) => handleFieldChange('alt', e.target.value)}
                   className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                   placeholder="Descriptive text for accessibility"
@@ -170,7 +170,7 @@ const DynamicImageSection: React.FC<DynamicImageSectionProps> = ({ section, isEd
                   Image Size
                 </label>
                 <select
-                  value={fields.size || 'large'}
+                  value={typeof fields.size === 'string' ? fields.size : 'large'}
                   onChange={(e) => handleFieldChange('size', e.target.value)}
                   className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                 >
@@ -186,7 +186,7 @@ const DynamicImageSection: React.FC<DynamicImageSectionProps> = ({ section, isEd
                   Alignment
                 </label>
                 <select
-                  value={fields.alignment || 'center'}
+                  value={typeof fields.alignment === 'string' ? fields.alignment : 'center'}
                   onChange={(e) => handleFieldChange('alignment', e.target.value)}
                   className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                 >
@@ -202,7 +202,7 @@ const DynamicImageSection: React.FC<DynamicImageSectionProps> = ({ section, isEd
                 </label>
                 <input
                   type="text"
-                  value={fields.link || ''}
+                  value={typeof fields.link === 'string' ? fields.link : ''}
                   onChange={(e) => handleFieldChange('link', e.target.value)}
                   className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                   placeholder="https://example.com"
@@ -215,7 +215,7 @@ const DynamicImageSection: React.FC<DynamicImageSectionProps> = ({ section, isEd
                 </label>
                 <input
                   type="text"
-                  value={fields.caption || ''}
+                  value={typeof fields.caption === 'string' ? fields.caption : ''}
                   onChange={(e) => handleFieldChange('caption', e.target.value)}
                   className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white"
                   placeholder="Image caption"

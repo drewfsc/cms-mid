@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 'use client';
 
 
@@ -17,7 +15,11 @@ interface DynamicColumnsSectionProps {
 const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, isEditMode = false, onUpdate }) => {
   const { fields, styling } = section;
   const features = (fields.features as string[]) || [];
-  const layoutDirection = fields.layout || 'text-left';
+  const layoutDirection = (fields.layout as string) || 'text-left';
+  
+  // Type-safe field getters
+  const getStringField = (field: unknown): string => String(field || '');
+  const getReactNodeField = (field: unknown): React.ReactNode => field as React.ReactNode;
   
   // Provide fallback styling if not defined
   const fallbackStyling = {
@@ -59,15 +61,17 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
     <div className="space-y-6">
       <h2 className={`text-3xl md:text-4xl font-bold ${SectionStylingUtils.getHeadingColorClasses(sectionStyling)}`}>
         {isEditMode ? (
-          <input
-            type="text"
-            value={fields.title || ''}
-            onChange={(e) => handleFieldChange('title', e.target.value)}
-            className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-blue-400"
-            placeholder="Section title"
-          />
+          <span>
+            <input
+              type="text"
+              value={getStringField(fields.title)}
+              onChange={(e) => handleFieldChange('title', e.target.value)}
+              className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-blue-400"
+              placeholder="Section title"
+            />
+          </span>
         ) : (
-          fields.title || 'Section Title'
+          getReactNodeField(fields.title) || 'Section Title'
         )}
       </h2>
 
@@ -76,13 +80,13 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
           {isEditMode ? (
             <input
               type="text"
-              value={fields.subtitle || ''}
+              value={getStringField(fields.subtitle)}
               onChange={(e) => handleFieldChange('subtitle', e.target.value)}
               className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-blue-600 dark:text-blue-400 outline-none focus:border-blue-400"
               placeholder="Section subtitle (optional)"
             />
           ) : (
-            fields.subtitle
+            getReactNodeField(fields.subtitle)
           )}
         </h3>
       )}
@@ -90,7 +94,7 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
       <div className={`prose prose-lg dark:prose-invert max-w-none ${SectionStylingUtils.getBodyTextColorClasses(sectionStyling)}`}>
         {isEditMode ? (
           <textarea
-            value={fields.content || ''}
+            value={getStringField(fields.content)}
             onChange={(e) => handleFieldChange('content', e.target.value)}
             className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-blue-400 min-h-[200px]"
             placeholder="Main content (supports markdown)"
@@ -144,27 +148,27 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
       {(fields.ctaText || isEditMode) && (
         <div className="pt-4">
           <a
-            href={fields.ctaLink || '#'}
+            href={getStringField(fields.ctaLink) || '#'}
             className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
           >
             {isEditMode ? (
               <input
                 type="text"
-                value={fields.ctaText || ''}
+                value={getStringField(fields.ctaText)}
                 onChange={(e) => handleFieldChange('ctaText', e.target.value)}
                 className="bg-transparent outline-none"
                 placeholder="Button text"
                 onClick={(e) => e.preventDefault()}
               />
             ) : (
-              fields.ctaText || 'Learn More'
+              getReactNodeField(fields.ctaText) || 'Learn More'
             )}
           </a>
           
           {isEditMode && (
             <input
               type="text"
-              value={fields.ctaLink || ''}
+              value={getStringField(fields.ctaLink)}
               onChange={(e) => handleFieldChange('ctaLink', e.target.value)}
               className="ml-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm"
               placeholder="Button link"
@@ -179,8 +183,8 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
     <div className="relative">
       {fields.image ? (
         <img
-          src={fields.image}
-          alt={fields.imageAlt || 'Featured image'}
+          src={getStringField(fields.image)}
+          alt={getStringField(fields.imageAlt) || 'Featured image'}
           className="w-full h-full object-cover rounded-2xl shadow-xl"
         />
       ) : (
@@ -189,7 +193,7 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
             <div className="text-center">
               <input
                 type="text"
-                value={fields.image || ''}
+                value={getStringField(fields.image)}
                 onChange={(e) => handleFieldChange('image', e.target.value)}
                 className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm mb-2"
                 placeholder="Image URL"
@@ -216,7 +220,7 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
           className="absolute inset-0 w-full h-full"
           style={{
             ...backgroundImageStyle,
-            transform: parallaxTransform
+            transform: `translateY(${parallaxTransform}px)`
           }}
         />
       )}
@@ -226,7 +230,7 @@ const DynamicColumnsSection: React.FC<DynamicColumnsSectionProps> = ({ section, 
           <div className="mb-6 flex items-center justify-center">
             <label className="text-sm text-gray-600 dark:text-gray-400 mr-2">Layout:</label>
             <select
-              value={layoutDirection}
+              value={getStringField(layoutDirection)}
               onChange={(e) => handleFieldChange('layout', e.target.value)}
               className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-1 text-sm"
             >

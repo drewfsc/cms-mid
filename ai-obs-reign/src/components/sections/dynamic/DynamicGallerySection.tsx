@@ -191,34 +191,34 @@ const DynamicGallerySection: React.FC<DynamicGallerySectionProps> = ({ section, 
         {/* Section Header */}
         {(fields.title || fields.description || isEditMode) && (
           <div className="text-center mb-12">
-            {(fields.title || isEditMode) && (
+            {((typeof fields.title === 'string' && fields.title) || isEditMode) && (
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 {isEditMode ? (
                   <input
                     type="text"
-                    value={fields.title || ''}
+                    value={typeof fields.title === 'string' ? fields.title : ''}
                     onChange={(e) => handleFieldChange('title', e.target.value)}
                     className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-900 dark:text-white outline-none focus:border-blue-400"
                     placeholder="Gallery title"
                   />
                 ) : (
-                  fields.title
+                  typeof fields.title === 'string' ? fields.title : ''
                 )}
               </h2>
             )}
 
-            {(fields.description || isEditMode) && (
+            {((typeof fields.description === 'string' && fields.description) || isEditMode) && (
               <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
                 {isEditMode ? (
                   <textarea
-                    value={fields.description || ''}
+                    value={typeof fields.description === 'string' ? fields.description : ''}
                     onChange={(e) => handleFieldChange('description', e.target.value)}
                     className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-gray-600 dark:text-gray-400 outline-none focus:border-blue-400"
                     placeholder="Gallery description"
                     rows={3}
                   />
                 ) : (
-                  fields.description
+                  typeof fields.description === 'string' ? fields.description : ''
                 )}
               </p>
             )}
