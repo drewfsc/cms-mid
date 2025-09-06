@@ -372,7 +372,22 @@ export default function CMSSections() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div 
+      className="min-h-screen bg-gray-50 dark:bg-gray-900"
+      onDragOver={(e) => {
+        // Allow drag over on the entire page to prevent default browser behavior
+        if (draggedTemplate) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'copy';
+        }
+      }}
+      onDragEnd={() => {
+        // Clean up drag state when drag ends anywhere on the page
+        setDraggedTemplate(null);
+        setDraggedSection(null);
+        setDragOverSection(null);
+      }}
+    >
       <CMSHeader title="Section Management" showBackButton={true} />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -423,9 +438,22 @@ export default function CMSSections() {
           {draggedTemplate && (
             <div 
               className="h-16 border-2 border-dashed border-blue-400 dark:border-blue-500 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center"
-              onDragOver={(e) => e.preventDefault()}
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.dataTransfer.dropEffect = 'copy';
+              }}
+              onDragEnter={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onDragLeave={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
               onDrop={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 if (draggedTemplate) {
                   const newSection = createSection(draggedTemplate.template, draggedTemplate.name);
                   const updatedSections = [newSection, ...sections];
@@ -470,11 +498,19 @@ export default function CMSSections() {
                 {/* Dedicated drop zone before each section */}
                 {draggedTemplate && (
                   <div 
-                    className="h-8 border-2 border-dashed border-transparent hover:border-blue-400 dark:hover:border-blue-500 rounded-lg bg-transparent hover:bg-blue-50 dark:hover:bg-blue-900/20 flex items-center justify-center transition-all duration-200"
+                    className="h-12 border-2 border-dashed border-blue-300 dark:border-blue-600 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center transition-all duration-200"
                     onDragOver={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       e.dataTransfer.dropEffect = 'copy';
+                    }}
+                    onDragEnter={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onDragLeave={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                     }}
                     onDrop={(e) => {
                       e.preventDefault();
@@ -509,7 +545,7 @@ export default function CMSSections() {
                       }
                     }}
                   >
-                    <div className="text-blue-600 dark:text-blue-400 font-medium text-sm opacity-0 hover:opacity-100 transition-opacity">
+                    <div className="text-blue-600 dark:text-blue-400 font-medium text-sm">
                       Drop here to add section
                     </div>
                   </div>
@@ -793,9 +829,22 @@ export default function CMSSections() {
           {draggedTemplate && (
             <div 
               className="h-16 border-2 border-dashed border-blue-400 dark:border-blue-500 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center"
-              onDragOver={(e) => e.preventDefault()}
+              onDragOver={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.dataTransfer.dropEffect = 'copy';
+              }}
+              onDragEnter={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onDragLeave={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
               onDrop={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 if (draggedTemplate) {
                   const newSection = createSection(draggedTemplate.template, draggedTemplate.name);
                   const updatedSections = [...sections, newSection];
