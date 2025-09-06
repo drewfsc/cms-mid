@@ -343,21 +343,22 @@ export default function CMSSections() {
           <div className="space-y-6 col-span-1">
             <div>
               <div className="flex justify-between">
+                <div>
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Section Types</h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                      Drag section types to add them to your page
+                    </p>
+                  </div>
                 <div className="flex items-center space-x-3">
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg btn-neumorphic hover:from-blue-600 hover:to-blue-700 flex items-center space-x-2 border-0"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add Section</span>
-            </button>
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Section Types</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                Drag section types to add them to your page
-              </p>
-              </div>
-          </div>
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg btn-neumorphic hover:from-blue-600 hover:to-blue-700 flex items-center space-x-2 border-0"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Section</span>
+                  </button>
+                  
+                </div>
               </div>
               
        
