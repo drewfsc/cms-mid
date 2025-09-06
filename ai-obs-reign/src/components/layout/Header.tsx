@@ -16,7 +16,7 @@ const Header = () => {
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const [navigation, setNavigation] = useState([
-    { name: 'Home', href: '/' }
+    { name: 'Home', href: '/', id: 'home' }
   ]);
   const [siteIcon, setSiteIcon] = useState<string | null>(null);
   const router = useRouter();
@@ -30,11 +30,12 @@ const Header = () => {
         .sort((a, b) => a.order - b.order)
         .map(section => ({
           name: section.navigationLabel || section.name,
-          href: `#${section.id}`
+          href: `#${section.id}`,
+          id: section.id // Add unique ID for React key
         }));
 
       setNavigation([
-        { name: 'Home', href: '/' },
+        { name: 'Home', href: '/', id: 'home' },
         ...navigationSections
       ]);
     };
@@ -142,9 +143,9 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
+            {navigation.map((item, index) => (
               <a
-                key={item.name}
+                key={item.id || `nav-${index}`}
                 href={item.href}
                 onClick={(e) => handleNavigationClick(e, item.href)}
                 className="text-white/80 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer"
@@ -239,9 +240,9 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-black/20 backdrop-blur-md border-t border-white/20">
-              {navigation.map((item) => (
+              {navigation.map((item, index) => (
                 <a
-                  key={item.name}
+                  key={item.id || `nav-${index}`}
                   href={item.href}
                   onClick={(e) => handleNavigationClick(e, item.href)}
                   className="text-white/80 hover:text-white block px-3 py-2 rounded-md text-base font-medium cursor-pointer"

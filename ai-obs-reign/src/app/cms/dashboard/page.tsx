@@ -112,7 +112,7 @@ export default function CMSDashboard() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {quickStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
@@ -134,7 +134,7 @@ export default function CMSDashboard() {
               </div>
             );
           })}
-        </div>
+        </div> */}
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Management Grid */}
@@ -174,7 +174,7 @@ export default function CMSDashboard() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             {/* Quick Actions */}
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic p-6 border-0">
+            {/* <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic p-6 border-0">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <TrendingUp className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                 Quick Actions
@@ -202,10 +202,10 @@ export default function CMSDashboard() {
                   </div>
                 </Link>
               </div>
-            </div>
+            </div> */}
 
             {/* Recent Activity */}
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic p-6 border-0">
+            {/* <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-neumorphic p-6 border-0">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <Calendar className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                 Recent Activity
@@ -231,7 +231,7 @@ export default function CMSDashboard() {
                   );
                 })}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </main>
